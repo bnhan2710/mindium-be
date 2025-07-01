@@ -19,7 +19,6 @@
     "noFallthroughCasesInSwitch": false,
       "paths": {
       "@shared/*": ["src/shared/*"],
-      "@common/*": ["src/common/*"],
       "@modules/*": ["src/config/*"],
     }
   }
