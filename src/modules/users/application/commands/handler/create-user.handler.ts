@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreateUserCommand } from "../implements/create-user.command";
-import { IUserRepository } from "@modules/user/domain/repositories/user.repository";
-import { UserEntity } from "@modules/user/domain/entities/user.entity";
+import { IUserRepository } from "@modules/users/domain/repositories/user.repository";
+import { User } from "@modules/users/domain/entities/user.entity";
 
 
 @CommandHandler(CreateUserCommand)

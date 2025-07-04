@@ -3,7 +3,14 @@ export interface IDPToken {
   idToken: string;
 }
 
+export interface UserProfile { 
+  id: string;
+  email: string;
+  name: string;
+  picture?: string;
+}
+
 export interface IOAuthProvider {
-    exchangeWithIDP(code: string): Promise<IDPToken>;
-    fetchProfile(idpToken: IDPToken): Promise<any>;
+    exchangeAuthorizationCode(code: string): Promise<IDPToken>;
+    fetchProfile(idpToken: IDPToken): Promise<UserProfile>;
 }
