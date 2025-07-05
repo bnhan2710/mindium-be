@@ -3,9 +3,9 @@ import { ExchangeTokenCommandHandler } from './application/commands/handlers/exc
 import { ExchangeTokenCommand } from './application/commands/implements/exchange-token.command';
 import { TokenPair } from './domain/value-objects/token-pair.vo';
 import { IOAuthProvider, IDPToken, UserProfile } from './domain/ports/oauth/oauth-provider';
-import { IUserRepository } from '../users/domain/repositories/user.repository';
+import { IUserRepository } from '../users/domain/ports/repositories/user.repository';
 import { AuthService } from './domain/services/auth.service';
-import { User } from '../users/domain/entities/user.entity';
+import { UserEntity } from '../users/domain/entities/user.entity';
 import { DI_TOKENS } from './di-tokens';
 
 describe('ExchangeTokenCommandHandler', () => {
@@ -26,7 +26,7 @@ describe('ExchangeTokenCommandHandler', () => {
     picture: 'https://example.com/avatar.jpg',
   };
 
-  const mockUser: User = new User({
+  const mockUser: UserEntity = new UserEntity({
     id: 'user-123',
     email: 'test@example.com',
     name: 'Test User',

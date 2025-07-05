@@ -70,14 +70,18 @@ export class EnvironmentKeyFactory {
 	}
 
 	getGoogleClientId(): string {
-		return this.getString('GOOGLE_CLIENT_ID');
+		return this.getString('GOOGLE_OAUTH_CLIENT_ID');
 	}
 
 	getGoogleClientSecret(): string {
-		return this.getString('GOOGLE_CLIENT_SECRET');
+		return this.getString('GOOGLE_OAUTH_CLIENT_SECRET');
 	}
 
 	getGoogleRedirectUrl(): string {
-		return this.getString('GOOGLE_REDIRECT_URL');
+		return this.getString('GOOGLE_OAUTH_REDIRECT_URL');
+	}
+
+	getClientUrl(): string {
+		return this.getString('CLIENT_URL');
 	}
 }

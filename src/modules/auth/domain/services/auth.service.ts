@@ -1,5 +1,4 @@
-import { User } from '@modules/users/domain/entities/user.entity';
-import { Session } from '../entities/session.entity';
+import { SessionEntity } from '../entities/session.entity';
 import { TokenPair } from '../value-objects/token-pair.vo';
 import { ISessionRepository } from '../ports/repositories/session.repository';
 import jwt from 'jsonwebtoken';
@@ -7,7 +6,7 @@ import { EnvironmentKeyFactory } from '@shared/services';
 import { v4 as uuidv4 } from 'uuid';
 import { Inject, Injectable } from '@nestjs/common';
 import { DI_TOKENS } from '@modules/auth/di-tokens';
-
+import { UserProfile } from '../ports/oauth/oauth-provider';
 @Injectable()
 export class AuthService {
   constructor(
@@ -33,11 +32,11 @@ export class AuthService {
     return jwt.verify(token, secret);
   }
 
-  async createSessionAndTokens(user: User): Promise<TokenPair> {
+  async createSessionAndTokens(user: UserProfile): Promise<TokenPair> {
     const sessionId = uuidv4();
-    const session = new Session({
+    const session = new SessionEntity({
       sessionId,
-      userId: user.id,
+      userId : user.id,
     });
     await this.sessionRepository.save(session);
 

@@ -6,7 +6,7 @@ import {
 	SWAGGER_API_PATH,
 	SWAGGER_API_TITLE,
 	SWAGGER_API_VERSION,
-} from '@shared/constants';
+} from '@shared/common/constants';
 
 export function setupSwagger(app: INestApplication): void {
 	const documentBuilder = new DocumentBuilder()

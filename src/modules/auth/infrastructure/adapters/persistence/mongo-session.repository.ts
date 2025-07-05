@@ -1,19 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Session } from '@modules/auth/domain/entities/session.entity';
+import { SessionEntity } from '@modules/auth/domain/entities/session.entity';
 import { ISessionRepository } from '@modules/auth/domain/ports/repositories/session.repository';
-import { SessionDocument } from './schema/session.schema';
-import { SessionMapper } from '../../../session.maper';
+import { SessionDocument, SessionModel } from './schema/session.schema';
+import { SessionMapper } from '../../mappers/session.maper';
 
 @Injectable()
-export class SessionRepository implements ISessionRepository {
+export class MongoSessionRepository implements ISessionRepository {
   constructor(
-    @InjectModel(Session.name)
-    private readonly sessionModel: Model<SessionDocument>
+    @InjectModel(SessionModel.name)
+    private readonly sessionModel: Model<SessionDocument>,
   ) {}
 
-  async save(session: Session): Promise<void>{
+  async save(session: SessionEntity): Promise<void>{
     const sessionDoc = SessionMapper.toPersistence(session);
     await this.sessionModel.updateOne(
       { sessionID: sessionDoc.sessionID },
@@ -22,7 +22,7 @@ export class SessionRepository implements ISessionRepository {
     ).exec();
   }
 
-  async findBySessionId(sessionId: string): Promise<Session | null> {
+  async findBySessionId(sessionId: string): Promise<SessionEntity | null> {
     const sessionDoc = await this.sessionModel.findOne({ sessionID: sessionId }).exec();
    return sessionDoc ? SessionMapper.toDomain(sessionDoc) : null;
   }

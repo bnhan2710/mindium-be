@@ -1,7 +1,7 @@
-import { Session } from "../../entities/session.entity";
+import { SessionEntity } from "../../entities/session.entity";
 
 export interface ISessionRepository{ 
-    save(sesion: Session): Promise<void>;
-    findBySessionId(sessionId: string): Promise<Session | null>;
+    save(sesion: SessionEntity): Promise<void>;
+    findBySessionId(sessionId: string): Promise<SessionEntity | null>;
     deleteBySessionId(sessionId: string): Promise<void>;
 }

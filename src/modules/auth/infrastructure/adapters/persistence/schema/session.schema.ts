@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-export type SessionDocument = Session & Document;
+export type SessionDocument = SessionModel & Document;
 
 @Schema({ timestamps: true })
-export class Session {
+export class SessionModel {
   @Prop({ required: true, unique: true })
   sessionID: string;
 
@@ -12,4 +12,4 @@ export class Session {
   userID: string;
 }
 
-export const SessionSchema = SchemaFactory.createForClass(Session); 
+export const SessionSchema = SchemaFactory.createForClass(SessionModel); 

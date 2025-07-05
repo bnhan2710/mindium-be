@@ -2,10 +2,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ExchangeTokenCommand } from '../implements/exchange-token.command';
 import { TokenPair } from '@modules/auth/domain/value-objects/token-pair.vo';
 import { IOAuthProvider } from '@modules/auth/domain/ports/oauth/oauth-provider';
-import { IUserRepository } from '@modules/users/domain/repositories/user.repository';
 import { AuthService } from '@modules/auth/domain/services/auth.service';
 import { Inject } from '@nestjs/common';
 import { DI_TOKENS } from '@modules/auth/di-tokens';
+import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
+import { UnauthorizedException } from '@nestjs/common';
 
 @CommandHandler(ExchangeTokenCommand)
 export class ExchangeTokenCommandHandler implements ICommandHandler<ExchangeTokenCommand> {
@@ -14,13 +15,18 @@ constructor(
     private readonly oAuthProvider: IOAuthProvider,
     @Inject(DI_TOKENS.USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
-    
+  
     private readonly authService: AuthService
 ) {}
   async execute(command: ExchangeTokenCommand): Promise<TokenPair> {
     const { code } = command;
 
     const idpToken = await this.oAuthProvider.exchangeAuthorizationCode(code);
+
+    if (!idpToken || !idpToken.idToken || !idpToken.accessToken) {
+      throw new UnauthorizedException('Invalid or expired authorization code');
+    }
+
     const userProfile = await this.oAuthProvider.fetchProfile({
       idToken: idpToken.idToken,
       accessToken: idpToken.accessToken,

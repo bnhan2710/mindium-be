@@ -1,4 +1,4 @@
-export class Session {
+export class SessionEntity {
     public readonly sessionId: string;
     public readonly userId: string;
 
