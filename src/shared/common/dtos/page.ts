@@ -1,5 +1,5 @@
-import { OffsetPagination } from '@shared/dtos/offset-pagination.request';
-import { CreatePage, PaginationMetadata } from '@shared/types';
+import { OffsetPagination } from '@shared/common/dtos/offset-pagination.request';
+import { CreatePage, PaginationMetadata } from '@shared/common/types';
 
 export class Page<T> {
 	items: T[];

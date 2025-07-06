@@ -1,5 +1,5 @@
 import { OffsetPagination } from './offset-pagination.request';
-import { PageRequest as IPageRequest } from '@shared/types';
+import { PageRequest as IPageRequest } from '@shared/common/types';
 
 export class PageRequest {
 	static of({ size, page }: OffsetPagination): IPageRequest {

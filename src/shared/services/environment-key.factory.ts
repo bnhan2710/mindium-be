@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModuleOptions } from '@nestjs/jwt';
 import { isBooleanString } from 'class-validator';
-/**
- * EnvironmentKeyFactory is a service that provides methods to retrieve and validate environment variables.
- * It includes methods for getting JWT configuration, salt rounds, and token expiration settings.
- */
+
 @Injectable()
 export class EnvironmentKeyFactory {
 	constructor(private readonly configService: ConfigService) {}
@@ -70,5 +67,21 @@ export class EnvironmentKeyFactory {
 
 	getMongodbDbName(): string {
 		return this.getString('MONGO_DB_NAME');
+	}
+
+	getGoogleClientId(): string {
+		return this.getString('GOOGLE_OAUTH_CLIENT_ID');
+	}
+
+	getGoogleClientSecret(): string {
+		return this.getString('GOOGLE_OAUTH_CLIENT_SECRET');
+	}
+
+	getGoogleRedirectUrl(): string {
+		return this.getString('GOOGLE_OAUTH_REDIRECT_URL');
+	}
+
+	getClientUrl(): string {
+		return this.getString('CLIENT_URL');
 	}
 }
