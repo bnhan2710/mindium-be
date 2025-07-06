@@ -17,8 +17,7 @@ async function bootstrap() {
 		credentials: true,
 	});
 
-	setupSwagger(app);
-
+	
 	app.useGlobalFilters(new HttpExceptionFilter());
 	app.useGlobalPipes(new ValidationPipe());
 	app.setGlobalPrefix('api');
@@ -26,6 +25,9 @@ async function bootstrap() {
 		type: VersioningType.URI,
 		defaultVersion: commonConfig.apiVersion,
 	});
+	
+	setupSwagger(app);
+
 	app.use(morgan('combined'));
 
 	const PORT = commonConfig.PORT;

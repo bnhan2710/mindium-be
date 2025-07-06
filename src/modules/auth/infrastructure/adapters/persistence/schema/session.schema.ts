@@ -3,7 +3,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 
 export type SessionDocument = SessionModel & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, collection: 'sessions' })
 export class SessionModel {
   @Prop({ required: true, unique: true })
   sessionID: string;

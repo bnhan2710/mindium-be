@@ -15,11 +15,7 @@ export class MongoSessionRepository implements ISessionRepository {
 
   async save(session: SessionEntity): Promise<void>{
     const sessionDoc = SessionMapper.toPersistence(session);
-    await this.sessionModel.updateOne(
-      { sessionID: sessionDoc.sessionID },
-      sessionDoc,
-      { upsert: true }
-    ).exec();
+    await this.sessionModel.create(sessionDoc);
   }
 
   async findBySessionId(sessionId: string): Promise<SessionEntity | null> {

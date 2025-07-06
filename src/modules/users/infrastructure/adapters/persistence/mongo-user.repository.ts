@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { IUserRepository } from "@modules/users/domain/ports/repositories/user.repository";
 import { UserEntity } from "@modules/users/domain/entities/user.entity";
 import { Model } from "mongoose";
-import { UserMapper } from "@modules/users/user.mapper";    
+import { UserMapper } from "@modules/users/infrastructure/mappers/user.mapper";    
 import { UserDocument, UserModel } from "@modules/users/infrastructure/adapters/persistence/schema/user.schema";
 import { InjectModel } from "@nestjs/mongoose";
 
@@ -15,11 +15,7 @@ export class MongoUserRepository implements IUserRepository {
     
     async save(user: UserEntity): Promise<void> {
         const userDoc = UserMapper.toPersistence(user);
-        await this.userModel.updateOne(
-            { _id: userDoc._id },
-            userDoc,
-            { upsert: true }
-        ).exec();
+        await this.userModel.create(userDoc)
     }
 
     async findByEmail(email: string): Promise<UserEntity | null> {
@@ -42,8 +38,6 @@ export class MongoUserRepository implements IUserRepository {
         email,
         name,
         avatar,
-        createdAt: new Date(),
-        updatedAt: new Date(),
         });
     
         const savedUser = await newUser.save();

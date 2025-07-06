@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ExchangeTokenCommand } from '../implements/exchange-token.command';
 import { TokenPair } from '@modules/auth/domain/value-objects/token-pair.vo';
 import { IOAuthProvider } from '@modules/auth/domain/ports/oauth/oauth-provider';
-import { AuthService } from '@modules/auth/domain/services/auth.service';
+import { AuthService } from '@modules/auth/application/services/auth.service';
 import { Inject } from '@nestjs/common';
 import { DI_TOKENS } from '@modules/auth/di-tokens';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
@@ -38,7 +38,12 @@ constructor(
       userProfile.picture
     );
 
-    const tokenPair = await this.authService.createSessionAndTokens(user);
+    const tokenPair = await this.authService.createSessionAndTokens({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      picture: user.avatar,
+    });
     
     return tokenPair;
   }

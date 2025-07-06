@@ -3,6 +3,7 @@ import { EnvironmentKeyFactory } from '@shared/services';
 import { IOAuthProvider } from '@modules/auth/domain/ports/oauth/oauth-provider';
 import axios from 'axios';
 import * as qs from 'qs';
+import { Console } from 'console';
 
 export interface GoogleTokenResponse {
   accessToken: string;
@@ -59,7 +60,6 @@ export class GoogleIdentityBroker implements IOAuthProvider{
         },
       }
     );
-
     return response.data;
   }
 } 

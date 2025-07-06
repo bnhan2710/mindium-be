@@ -13,7 +13,6 @@ export class SessionMapper {
         return {
             sessionID: session.sessionId,
             userID: session.userId,
-            _id: session.sessionId,
         } as SessionDocument;
     }   
 }

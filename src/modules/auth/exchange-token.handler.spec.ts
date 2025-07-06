@@ -4,7 +4,7 @@ import { ExchangeTokenCommand } from './application/commands/implements/exchange
 import { TokenPair } from './domain/value-objects/token-pair.vo';
 import { IOAuthProvider, IDPToken, UserProfile } from './domain/ports/oauth/oauth-provider';
 import { IUserRepository } from '../users/domain/ports/repositories/user.repository';
-import { AuthService } from './domain/services/auth.service';
+import { AuthService } from './application/services/auth.service';
 import { UserEntity } from '../users/domain/entities/user.entity';
 import { DI_TOKENS } from './di-tokens';
 
