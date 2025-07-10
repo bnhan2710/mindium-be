@@ -8,22 +8,24 @@ import { SessionMapper } from '../../mappers/session.maper';
 
 @Injectable()
 export class MongoSessionRepository implements ISessionRepository {
-  constructor(
-    @InjectModel(SessionModel.name)
-    private readonly sessionModel: Model<SessionDocument>,
-  ) {}
+	constructor(
+		@InjectModel(SessionModel.name)
+		private readonly sessionModel: Model<SessionDocument>,
+	) {}
 
-  async save(session: SessionEntity): Promise<void>{
-    const sessionDoc = SessionMapper.toPersistence(session);
-    await this.sessionModel.create(sessionDoc);
-  }
+	async save(session: SessionEntity): Promise<void> {
+		const sessionDoc = SessionMapper.toPersistence(session);
+		await this.sessionModel.create(sessionDoc);
+	}
 
-  async findBySessionId(sessionId: string): Promise<SessionEntity | null> {
-    const sessionDoc = await this.sessionModel.findOne({ sessionID: sessionId }).exec();
-   return sessionDoc ? SessionMapper.toDomain(sessionDoc) : null;
-  }
+	async findBySessionId(sessionId: string): Promise<SessionEntity | null> {
+		const sessionDoc = await this.sessionModel
+			.findOne({ sessionID: sessionId })
+			.exec();
+		return sessionDoc ? SessionMapper.toDomain(sessionDoc) : null;
+	}
 
-  async deleteBySessionId(sessionId: string): Promise<void> {
-    await this.sessionModel.deleteOne({ sessionID: sessionId }).exec();
-  }
-} 
+	async deleteBySessionId(sessionId: string): Promise<void> {
+		await this.sessionModel.deleteOne({ sessionID: sessionId }).exec();
+	}
+}

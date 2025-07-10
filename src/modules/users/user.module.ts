@@ -1,31 +1,28 @@
 import { Module } from '@nestjs/common';
-import { IUserRepository } from './domain/ports/repositories/user.repository';
 import { MongoUserRepository } from './infrastructure/adapters/persistence/mongo-user.repository';
-import { UserModel, UserSchema } from './infrastructure/adapters/persistence/schema/user.schema';
-import { DI_TOKENS } from './di-tokens';
+import {
+	UserModel,
+	UserSchema,
+} from './infrastructure/adapters/persistence/schema/user.schema';
+import { USER_DI_TOKENS } from './user.di-tokens';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserController } from './infrastructure/user.controller';
+import { GetUserProfileQueryHandler } from './application/queries/handlers/get-user-profile.handler';
+import { GetFollowerQueryHandler } from './application/queries/handlers/get-follower.handler';
+
+const QueryHandlers = [GetUserProfileQueryHandler,GetFollowerQueryHandler];
 
 const Repositories = [
-  {
-    provide: DI_TOKENS.USER_REPOSITORY,
-    useClass: MongoUserRepository,
-  },
+	{
+		provide: USER_DI_TOKENS.USER_REPOSITORY,
+		useClass: MongoUserRepository,
+	},
 ];
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([
-            { name: UserModel.name, schema: UserSchema },
-        ]),
-    ],
-    providers: [
-        ...Repositories,
-        MongoUserRepository,
-    ],
-    exports: [
-        ...Repositories,
-        MongoUserRepository,
-    ],
-    controllers: [],
+	imports: [MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }])],
+	providers: [...QueryHandlers, ...Repositories, MongoUserRepository],
+	exports: [...Repositories, MongoUserRepository],
+	controllers: [UserController],
 })
 export class UserModule {}

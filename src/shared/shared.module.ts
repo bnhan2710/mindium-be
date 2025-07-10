@@ -8,8 +8,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 		ConfigModule.forRoot({
 			isGlobal: true,
 		}),
-        CqrsModule.forRoot({
-        }),
+		CqrsModule.forRoot({}),
 	],
 	providers: [DigestService, EnvironmentKeyFactory],
 	exports: [DigestService, EnvironmentKeyFactory, ConfigModule, CqrsModule],

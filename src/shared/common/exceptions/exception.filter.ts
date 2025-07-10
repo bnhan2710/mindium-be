@@ -7,51 +7,61 @@ import {
 	Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { DomainError } from '../errors/domain.error';
 
 @Catch()
-export class HttpExceptionFilter implements ExceptionFilter<HttpException | Error> {
-	private readonly logger = new Logger(HttpExceptionFilter.name);
+export class GlobalExceptionFilter implements ExceptionFilter {
+	private readonly logger = new Logger(GlobalExceptionFilter.name);
 
-	catch(
-		exception: HttpException | Error,
-		host: ArgumentsHost,
-	): Response<string, Record<string, string>> {
-		this.logger.error(exception.message, exception.stack);
-		const request = host.switchToHttp().getRequest<Request>();
-		const response = host.switchToHttp().getResponse<Response>();
+	catch(exception: unknown, host: ArgumentsHost): Response {
+		const ctx = host.switchToHttp();
+		const request = ctx.getRequest<Request>();
+		const response = ctx.getResponse<Response>();
 
-		if (exception instanceof HttpException) {
-			this.logger.error(
-				{
-					request: {
-						method: request.method,
-						url: request.url,
-						body: request.body,
-					},
-				},
-				exception.stack,
-			);
-			if (exception.getStatus() === HttpStatus.INTERNAL_SERVER_ERROR)
-				return response.status(500).json();
-			if (
-				exception.getStatus() === 404 &&
-				exception.message.split(' ')[0] === 'Cannot' &&
-				exception.message.split(' ').length === 3
-			)
-				return response.status(404).json();
-			return response.status(exception.getStatus()).json(exception.getResponse());
+		const logContext = {
+			method: request.method,
+			url: request.url,
+			body: request.body,
+		};
+
+		this.logger.error(exception instanceof Error ? exception.message : 'Unknown error');
+		this.logger.error({ request: logContext }, exception instanceof Error ? exception.stack : '');
+
+		if (exception instanceof DomainError) {
+			return response.status(exception.statusCode).json({
+				statusCode: exception.statusCode,
+				message: exception.message,
+				error: exception.name,
+			});
 		}
 
-		this.logger.error(
-			{
-				request: {
-					method: request.method,
-					url: request.url,
-					body: request.body,
-				},
-			},
-			exception.stack,
-		);
-		return response.status(500).json();
+		if (exception instanceof HttpException) {
+			const status = exception.getStatus();
+			const res = exception.getResponse();
+
+			if (
+				status === 404 &&
+				typeof exception.message === 'string' &&
+				exception.message.startsWith('Cannot')
+			) {
+				return response.status(404).json({
+					statusCode: 404,
+					message: 'Route not found',
+					error: 'NotFound',
+				});
+			}
+
+			return response.status(status).json(
+				typeof res === 'string'
+					? { statusCode: status, message: res, error: exception.name }
+					: res
+			);
+		}
+
+		return response.status(500).json({
+			statusCode: 500,
+			message: 'Internal server error',
+			error: exception instanceof Error ? exception.name : 'UnknownError',
+		});
 	}
 }
