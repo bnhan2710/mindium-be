@@ -18,7 +18,7 @@ export class GetFollowerQueryHandler implements IQueryHandler<GetFollowerQuery> 
 		if (!followers) {
 			throw new UserNotFoundError(userId);
 		}
-		return followers.map(follower => UserResponseDto.fromDomain(follower));
+		return UserResponseDto.fromDomainList(followers);
 
 	}
 }

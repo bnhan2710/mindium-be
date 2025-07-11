@@ -9,8 +9,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from './infrastructure/user.controller';
 import { GetUserProfileQueryHandler } from './application/queries/handlers/get-user-profile.handler';
 import { GetFollowerQueryHandler } from './application/queries/handlers/get-follower.handler';
+import { GetFollowingQueryHandler } from './application/queries/handlers/get-folllowing.handler';
 
-const QueryHandlers = [GetUserProfileQueryHandler,GetFollowerQueryHandler];
+const QueryHandlers = [GetUserProfileQueryHandler,GetFollowerQueryHandler,GetFollowingQueryHandler];
 
 const Repositories = [
 	{

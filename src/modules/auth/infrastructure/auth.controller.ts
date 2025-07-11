@@ -6,7 +6,7 @@ import { EnvironmentKeyFactory } from '@shared/services';
 import { LogoutCommand } from '../application/commands/implements/logout.command';
 import { RefreshTokenCommand } from '../application/commands/implements/refresh-token.command';
 import { TokenPair } from '../domain/value-objects/token-pair.vo';
-import { ExchangeGoogleTokenDto, RefreshTokenDto, LogoutDto } from '../application/dtos';
+import { ExchangeGoogleTokenDto, RefreshTokenDto, LogoutDto } from '../application/dtos/request';
 
 @ApiTags('Auth')
 @Controller({
@@ -22,11 +22,10 @@ export class AuthController {
 	@Get('google/oauth')
 	@Redirect()
 	async exchangeGoogleToken(
-		@Query() query: ExchangeGoogleTokenDto,
+		@Query() exchangeGoogleTokenDto: ExchangeGoogleTokenDto,
 	): Promise<{ url: string }> {
-		const { code } = query;
 		const exchangeResult = await this.commandBus.execute(
-			new ExchangeTokenCommand(code),
+			new ExchangeTokenCommand(exchangeGoogleTokenDto),
 		);
 		const params = new URLSearchParams({
 			uid: exchangeResult.sub,
@@ -39,13 +38,13 @@ export class AuthController {
 
 	@Post('logout')
 	async logout(@Body() logoutDto: LogoutDto): Promise<void> {
-		await this.commandBus.execute(new LogoutCommand(logoutDto.refresh_token));
+		await this.commandBus.execute(new LogoutCommand(logoutDto));
 	}
 
 	@Post('refresh')
 	async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenPair> {
 		const tokenPair : TokenPair = await this.commandBus.execute(
-			new RefreshTokenCommand(refreshTokenDto.refresh_token),
+			new RefreshTokenCommand(refreshTokenDto),
 		);
 		return tokenPair;
 	}
