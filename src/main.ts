@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { commonConfig } from '@shared/config/common.config';
+import { commonConfig } from 'src/configs/common.config';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
-import { setupSwagger } from '@shared/config/swagger';
+import { setupSwagger } from 'src/configs/swagger';
 import { GlobalExceptionFilter } from '@shared/common/exceptions/exception.filter';
 import * as morgan from 'morgan';
 

@@ -6,6 +6,7 @@ import { GetUserProfileQuery } from '../application/queries/implements/get-user-
 import { ApiTags } from '@nestjs/swagger';
 import { GetFollowerQuery } from '../application/queries/implements/get-follower.query';
 import { ObjectIdValidationPipe } from '@shared/common/pipes/object-id-validation.pipe';
+import { GetFollowingQuery } from '../application/queries/implements/get-following.query';
 
 @ApiTags('Users')
 @Controller({
@@ -26,5 +27,10 @@ export class UserController {
 	@Get('followers/:userId')
 	async getFollowers(@Param('userId', ObjectIdValidationPipe) userId: string) {
 		return await this.queryBus.execute(new GetFollowerQuery(userId));
+	}
+
+	@Get('followings/:userId')
+	async getFollowings(@Param('userId', ObjectIdValidationPipe) userId: string) {
+		return await this.queryBus.execute(new GetFollowingQuery(userId));
 	}
 }

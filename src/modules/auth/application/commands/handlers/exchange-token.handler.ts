@@ -22,7 +22,7 @@ export class ExchangeTokenCommandHandler
 		private readonly authService: AuthService,
 	) {}
 	async execute(command: ExchangeTokenCommand): Promise<TokenPair> {
-		const { code } = command;
+		const { code } = command.exchangeGoogleTokenDto;
 
 		const idpToken = await this.oAuthProvider.exchangeAuthorizationCode(code);
 
