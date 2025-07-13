@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Post, Query, Redirect, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
-import { ExchangeTokenCommand } from '../application/commands/implements/exchange-token.command';
+import { ExchangeTokenCommand } from '../../../application/commands/implements/exchange-token.command';
 import { EnvironmentKeyFactory } from '@shared/services';
-import { LogoutCommand } from '../application/commands/implements/logout.command';
-import { RefreshTokenCommand } from '../application/commands/implements/refresh-token.command';
-import { TokenPair } from '../domain/value-objects/token-pair.vo';
-import { ExchangeGoogleTokenDto, RefreshTokenDto, LogoutDto } from '../application/dtos/request';
+import { LogoutCommand } from '../../../application/commands/implements/logout.command';
+import { RefreshTokenCommand } from '../../../application/commands/implements/refresh-token.command';
+import { TokenPair } from '../../../domain/value-objects/token-pair.vo';
+import { ExchangeGoogleTokenDto, RefreshTokenDto, LogoutDto } from '../dtos';
 
 @ApiTags('Auth')
 @Controller({
@@ -25,7 +25,7 @@ export class AuthController {
 		@Query() exchangeGoogleTokenDto: ExchangeGoogleTokenDto,
 	): Promise<{ url: string }> {
 		const exchangeResult = await this.commandBus.execute(
-			new ExchangeTokenCommand(exchangeGoogleTokenDto),
+			new ExchangeTokenCommand(exchangeGoogleTokenDto.code),
 		);
 		const params = new URLSearchParams({
 			uid: exchangeResult.sub,
@@ -38,13 +38,13 @@ export class AuthController {
 
 	@Post('logout')
 	async logout(@Body() logoutDto: LogoutDto): Promise<void> {
-		await this.commandBus.execute(new LogoutCommand(logoutDto));
+		await this.commandBus.execute(new LogoutCommand(logoutDto.refresh_token));
 	}
 
 	@Post('refresh')
 	async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenPair> {
 		const tokenPair : TokenPair = await this.commandBus.execute(
-			new RefreshTokenCommand(refreshTokenDto),
+			new RefreshTokenCommand(refreshTokenDto.refresh_token),
 		);
 		return tokenPair;
 	}

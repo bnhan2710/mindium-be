@@ -2,15 +2,16 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ExchangeTokenCommand } from '../implements/exchange-token.command';
 import { TokenPair } from '@modules/auth/domain/value-objects/token-pair.vo';
 import { IOAuthProvider } from '@modules/auth/domain/ports/oauth/oauth-provider';
-import { AuthService } from '@modules/auth/application/services/auth.service';
+import { AuthService } from '@modules/auth/application/services/authentication-application.service';
 import { Inject } from '@nestjs/common';
 import { AUTH_DI_TOKENS } from '@modules/auth/auth.di-tokens';
 import { USER_DI_TOKENS } from '@modules/users/user.di-tokens';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
 import { UnauthorizedException } from '@nestjs/common';
+import { TokenApplicationDto } from '../../dtos/response';
 
 @CommandHandler(ExchangeTokenCommand)
-export class ExchangeTokenCommandHandler
+export class LoginCommandHandler
 	implements ICommandHandler<ExchangeTokenCommand>
 {
 	constructor(
@@ -21,8 +22,8 @@ export class ExchangeTokenCommandHandler
 
 		private readonly authService: AuthService,
 	) {}
-	async execute(command: ExchangeTokenCommand): Promise<TokenPair> {
-		const { code } = command.exchangeGoogleTokenDto;
+	async execute(command: ExchangeTokenCommand): Promise<TokenApplicationDto> {
+		const { code } = command;
 
 		const idpToken = await this.oAuthProvider.exchangeAuthorizationCode(code);
 

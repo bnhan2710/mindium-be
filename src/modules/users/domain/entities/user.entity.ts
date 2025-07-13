@@ -1,4 +1,4 @@
-export class UserEntity {
+export class User {
   public readonly id: string;
   public email: string;
   public name: string;

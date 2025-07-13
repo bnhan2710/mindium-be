@@ -3,7 +3,7 @@ import { GetUserProfileQuery } from '../implements/get-user-profile.query';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
 import { Inject } from '@nestjs/common';
 import { USER_DI_TOKENS } from '@modules/users/user.di-tokens';
-import { UserResponseDto } from '../../dtos/user-response.dto';
+import { UserApplicationDto } from '../../dtos/user-application.dto';
 import { UserNotFoundError } from '@modules/users/domain/errors';
 
 
@@ -14,7 +14,7 @@ export class GetUserProfileQueryHandler implements IQueryHandler<GetUserProfileQ
 		private readonly userRepository: IUserRepository,
 	) {}
 
-	async execute(query: GetUserProfileQuery): Promise<UserResponseDto> {
+	async execute(query: GetUserProfileQuery): Promise<UserApplicationDto> {
 		const { userId } = query;
 		const user = await this.userRepository.findById(userId);
 
@@ -22,6 +22,6 @@ export class GetUserProfileQueryHandler implements IQueryHandler<GetUserProfileQ
 			throw new UserNotFoundError(userId);
 		}
 
-		return UserResponseDto.fromDomain(user);
+		return UserApplicationDto.fromDomain(user);
 	}
 }

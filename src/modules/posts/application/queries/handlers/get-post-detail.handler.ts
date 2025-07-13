@@ -2,7 +2,7 @@ import { QueryHandler } from "@nestjs/cqrs";
 import { IQueryHandler } from "@nestjs/cqrs";
 import { GetPostDetailQuery } from "../implements/get-post-detail.query";
 import { IPostRepository } from "../../../domain/port/repositories/post.repository";
-import { PostNotFoundError } from "../../../domain/errors/post-notfound";
+import { PostNotFoundError } from "../../../domain/errors";
 
 
 @QueryHandler(GetPostDetailQuery)

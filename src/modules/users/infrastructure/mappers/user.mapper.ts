@@ -1,10 +1,10 @@
-import { UserEntity } from '@modules/users/domain/entities/user.entity';
+import { User } from '@modules/users/domain/entities/user.entity';
 import { UserDocument, UserModel } from '../adapters/persistence/schema/user.schema';
 import { Types } from 'mongoose'; 
 
 export class UserMapper {
-  static toDomain(user: UserDocument): UserEntity {
-    return new UserEntity(
+  static toDomain(user: UserDocument): User {
+    return new User(
       (user as any)._id,
       user.email,
       user.name,
@@ -14,7 +14,7 @@ export class UserMapper {
     );
   }
 
-  static toPersistence(entity: UserEntity): Partial<UserDocument> {
+  static toPersistence(entity: User): Partial<UserDocument> {
     return {
       email: entity.email,
       name: entity.name,

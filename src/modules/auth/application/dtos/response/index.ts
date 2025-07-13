@@ -1,1 +1,1 @@
-export * from './token-response.dto'
+export * from './token-pair.dto'

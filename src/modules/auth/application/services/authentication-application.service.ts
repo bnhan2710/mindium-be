@@ -1,4 +1,4 @@
-import { SessionEntity } from '../../domain/entities/session.entity';
+import { Session } from '../../domain/entities/session.entity';
 import { TokenPair } from '../../domain/value-objects/token-pair.vo';
 import { ISessionRepository } from '../../domain/ports/repositories/session.repository';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,17 +16,13 @@ export class AuthService {
 	) {}
 
 	async createSessionAndTokens(user: UserProfile): Promise<TokenPair> {
-		const sessionId = uuidv4();
-		const session = new SessionEntity({
-			sessionId,
-			userId: user.id,
-		});
+		const session = Session.create(user.id);
 		await this.sessionRepository.save(session);
 
 		const payload = {
 			_id: user.id,
 			sub: user.id,
-			sid: sessionId,
+			sid: session.getSessionId(),
 		};
 
 		const accessToken = await this.tokenPort.generateAccessToken(payload);

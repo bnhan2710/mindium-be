@@ -1,9 +1,23 @@
-export class SessionEntity {
-	public readonly sessionId: string;
-	public readonly userId: string;
+import { UserId } from "../value-objects/user-id.vo";
+import { SessionId } from "../value-objects/session-id.vo";
+export class Session {
+    private constructor(
+        private readonly sessionId: SessionId,
+        private readonly userId: UserId,
+    ) {}
 
-	constructor(prop: { sessionId: string; userId: string }) {
-		this.sessionId = prop.sessionId;
-		this.userId = prop.userId;
+    static create(userId: string): Session {
+        return new Session(
+			SessionId.generate(),
+            new UserId(userId),
+        );
+    }
+
+	getSessionId(): SessionId {
+		return this.sessionId;
+	}
+
+	getUserId(): UserId {
+		return this.userId;
 	}
 }

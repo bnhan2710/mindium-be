@@ -34,18 +34,18 @@ export class GetPostResponseDto {
     })
     
     public author: string | PostAuthor;
+
     @ApiProperty({
         description: 'The tags associated with the post',
         example: ['nestjs', 'cqrs', 'hexagonal architecture'],
         type: [String],
     })
-    
     public tags: string[];
+    
     @ApiProperty({
         description: 'A brief summary of the post',
         example: 'This post explains the concepts of CQRS in NestJS.',
     })
-    
     public summary: string; 
     @ApiProperty({
         description: 'The date and time when the post was created',

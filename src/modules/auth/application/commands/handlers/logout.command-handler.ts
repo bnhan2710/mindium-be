@@ -16,9 +16,9 @@ export class LogoutCommandHandler implements ICommandHandler<LogoutCommand> {
 	) {}
 
 	async execute(command: LogoutCommand): Promise<void> {
-		const { refresh_token } = command.logoutDto;
+		const { refreshToken } = command;
 
-		const jwtClaims = await this.tokenPort.verifyRefreshToken(refresh_token);
+		const jwtClaims = await this.tokenPort.verifyRefreshToken(refreshToken);
 		if (!jwtClaims || !jwtClaims['sid'] || !jwtClaims['sub']) {
 			throw new UnauthorizedException('Invalid refresh token');
 		}

@@ -10,7 +10,7 @@ import { Inject } from '@nestjs/common';
 
 @CommandHandler(RefreshTokenCommand)
 @Injectable()
-export class RefreshTokenCommandHandler implements ICommandHandler<RefreshTokenCommand> {
+export class RefreshTokenCommandHanlder implements ICommandHandler<RefreshTokenCommand> {
 	constructor(
 		@Inject(AUTH_DI_TOKENS.TOKEN_PORT)
 		private readonly tokenPort: ITokenPort,
@@ -19,13 +19,13 @@ export class RefreshTokenCommandHandler implements ICommandHandler<RefreshTokenC
 	) {}
 
 	async execute(command: RefreshTokenCommand): Promise<TokenPair> {
-		const { refresh_token } = command.refreshTokenDto;
+		const { refreshToken } = command;
 
-		if (!refresh_token) {
+		if (!refreshToken) {
 			throw new UnauthorizedException('Refresh token is required');
 		}
 
-		const jwtClaims = await this.tokenPort.verifyRefreshToken(refresh_token);
+		const jwtClaims = await this.tokenPort.verifyRefreshToken(refreshToken);
 		if (!jwtClaims || !jwtClaims['sid'] || !jwtClaims['sub']) {
 			throw new UnauthorizedException('Invalid refresh token');
 		}
@@ -33,7 +33,6 @@ export class RefreshTokenCommandHandler implements ICommandHandler<RefreshTokenC
 		const sessionId = jwtClaims['sid'];
 		const subject = jwtClaims['sub'];
 		const session = await this.sessionRepository.findBySessionId(sessionId);
-		console.log('Session found:', session);
 		if (!session) {
 			throw new UnauthorizedException('Session not found');
 		}

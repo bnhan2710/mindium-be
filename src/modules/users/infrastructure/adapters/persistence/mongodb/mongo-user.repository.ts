@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
-import { UserEntity } from '@modules/users/domain/entities/user.entity';
+import { User } from '@modules/users/domain/entities/user.entity';
 import { Model } from 'mongoose';
 import { UserMapper } from '@modules/users/infrastructure/mappers/user.mapper';
 import {
@@ -16,22 +16,22 @@ export class MongoUserRepository implements IUserRepository {
 		private readonly userModel: Model<UserDocument>,
 	) {}
 
-	async save(user: UserEntity): Promise<void> {
+	async save(user: User): Promise<void> {
 		const userDoc = UserMapper.toPersistence(user);
 		await this.userModel.create(userDoc);
 	}
 
-	async findByEmail(email: string): Promise<UserEntity | null> {
+	async findByEmail(email: string): Promise<User | null> {
 		const userDoc = await this.userModel.findOne({ email }).exec();
 		return userDoc ? UserMapper.toDomain(userDoc) : null;
 	}
 
-	async findById(id: string): Promise<UserEntity | null> {
+	async findById(id: string): Promise<User | null> {
 		const userDoc = await this.userModel.findById(id).exec();
 		return userDoc ? UserMapper.toDomain(userDoc) : null;
 	}
 
-	async findByIdWithFollowers(userId: string): Promise<UserEntity[] | null> {
+	async findByIdWithFollowers(userId: string): Promise<User[] | null> {
 		const userDoc = await this.userModel
 			.findById(userId)
 			.populate({
@@ -44,7 +44,7 @@ export class MongoUserRepository implements IUserRepository {
 		return userDoc.followers.map(follower => UserMapper.toDomain(follower as unknown as UserDocument));
 	}
 
-	async findByIdWithFollowings(userId: string): Promise<UserEntity[] | null> {
+	async findByIdWithFollowings(userId: string): Promise<User[] | null> {
 		const userDoc = await this.userModel
 			.findById(userId)
 			.populate({
@@ -62,7 +62,7 @@ export class MongoUserRepository implements IUserRepository {
 		email: string,
 		name: string,
 		avatar?: string,
-	): Promise<UserEntity> {
+	): Promise<User> {
 		const existingUser = await this.userModel.findOne({ email }).exec();
 		if (existingUser) {
 			return UserMapper.toDomain(existingUser);

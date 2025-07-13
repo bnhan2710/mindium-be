@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { MongoUserRepository } from './infrastructure/adapters/persistence/mongo-user.repository';
+import { MongoUserRepository } from './infrastructure/adapters/persistence/mongodb/mongo-user.repository';
 import {
 	UserModel,
 	UserSchema,
 } from './infrastructure/adapters/persistence/schema/user.schema';
 import { USER_DI_TOKENS } from './user.di-tokens';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserController } from './infrastructure/user.controller';
+import { UserController } from './presentation/controllers/user.controller';
 import { GetUserProfileQueryHandler } from './application/queries/handlers/get-user-profile.handler';
 import { GetFollowerQueryHandler } from './application/queries/handlers/get-follower.handler';
 import { GetFollowingQueryHandler } from './application/queries/handlers/get-folllowing.handler';

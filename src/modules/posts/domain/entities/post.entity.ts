@@ -1,12 +1,14 @@
 import { SlugGenerator } from "@shared/services";
+import { Slug } from "../value-objects/slug";
+import { Tag } from "../value-objects/tag";
 
 export class PostEntity {
     public readonly id: string;
     public title: string;
     public content: string;
     public author: string;
-    public slug: string
-    public tags: string[];
+    public slug: Slug;
+    public tags: Tag[];
     public summary: string; 
     public readonly createdAt: Date;
     public updatedAt: Date;
@@ -14,19 +16,30 @@ export class PostEntity {
     constructor(
         id: string,
         title: string,
-        tags: string[],
-        summary: string,
+        content: string,
         author: string,
+        tags: string[],
         createdAt: Date = new Date(),
         updatedAt: Date = new Date()
     ) {
         this.id = id;
         this.title = title;
-        this.tags = tags || []; 
-        this.summary = summary;
+        this.content = content;
+        this.tags = tags.map(tag => Tag.create(tag));
+        this.summary = this.generatePostSummary(content);
+        this.slug = Slug.createFromTitle(title);
         this.author = author;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public static create(
+        title: string,
+        content: string,
+        author: string,
+        tags: string[],
+    ) {
+        
     }
 
 
@@ -50,25 +63,20 @@ export class PostEntity {
     return summary;
 }
 
-    public generateSlug(): string {
-
-        this.slug = SlugGenerator.generate(this.title);
-        return this.slug;
+    public generateSlug(title): string {
+        return SlugGenerator.generate(title);
     }
 
 
-    public addTag(tag: string): void {
-        if (!this.tags.includes(tag)) {
-            this.tags.push(tag);
-            this.updatedAt = new Date();
-        }
+  public addTag(tag: Tag): void {
+    if (!this.tags.some(t => t.getValue() === tag.getValue())) {
+      this.tags.push(tag);
+      this.updatedAt = new Date();
     }
+  }
 
-    public removeTag(tag: string): void {
-        const index = this.tags.indexOf(tag);
-        if (index > -1) {
-            this.tags.splice(index, 1);
-            this.updatedAt = new Date();
-        }
-    }
+  public removeTag(tag: Tag): void {
+    this.tags = this.tags.filter(t => t.getValue() !== tag.getValue());
+    this.updatedAt = new Date();
+  }
 }
