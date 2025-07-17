@@ -1,10 +1,9 @@
-import { Session } from '../../domain/entities/session.entity';
-import { TokenPair } from '../../domain/value-objects/token-pair.vo';
-import { ISessionRepository } from '../../domain/ports/repositories/session.repository';
-import { v4 as uuidv4 } from 'uuid';
+import { Session } from '../entities/session.entity';
+import { TokenPair } from '../value-objects/token-pair.vo';
+import { ISessionRepository } from '../ports/repositories/session.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { AUTH_DI_TOKENS } from '@modules/auth/auth.di-tokens';
-import { UserProfile } from '../../domain/ports/oauth/oauth-provider';
+import { UserProfile } from '../ports/oauth/oauth-provider';
 import { ITokenPort } from '@modules/auth/domain/ports/token/token.port';
 @Injectable()
 export class AuthService {

@@ -24,8 +24,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 			body: request.body,
 		};
 
-		this.logger.error(exception instanceof Error ? exception.message : 'Unknown error');
-		this.logger.error({ request: logContext }, exception instanceof Error ? exception.stack : '');
+		this.logger.error(
+			exception instanceof Error ? exception.message : 'Unknown error',
+		);
+		this.logger.error(
+			{ request: logContext },
+			exception instanceof Error ? exception.stack : '',
+		);
 
 		if (exception instanceof DomainError) {
 			return response.status(exception.statusCode).json({
@@ -51,11 +56,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 				});
 			}
 
-			return response.status(status).json(
-				typeof res === 'string'
-					? { statusCode: status, message: res, error: exception.name }
-					: res
-			);
+			return response
+				.status(status)
+				.json(
+					typeof res === 'string'
+						? { statusCode: status, message: res, error: exception.name }
+						: res,
+				);
 		}
 
 		return response.status(500).json({

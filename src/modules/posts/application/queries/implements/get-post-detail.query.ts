@@ -1,7 +1,5 @@
-import { ICommand } from "@nestjs/cqrs";
+import { ICommand } from '@nestjs/cqrs';
 
 export class GetPostDetailQuery implements ICommand {
-    constructor(
-        public readonly postId: string,
-    ) {}
+	constructor(public readonly postId: string) {}
 }

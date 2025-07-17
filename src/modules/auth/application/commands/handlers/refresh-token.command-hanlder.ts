@@ -21,10 +21,6 @@ export class RefreshTokenCommandHanlder implements ICommandHandler<RefreshTokenC
 	async execute(command: RefreshTokenCommand): Promise<TokenPair> {
 		const { refreshToken } = command;
 
-		if (!refreshToken) {
-			throw new UnauthorizedException('Refresh token is required');
-		}
-
 		const jwtClaims = await this.tokenPort.verifyRefreshToken(refreshToken);
 		if (!jwtClaims || !jwtClaims['sid'] || !jwtClaims['sub']) {
 			throw new UnauthorizedException('Invalid refresh token');

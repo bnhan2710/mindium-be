@@ -1,25 +1,45 @@
+
 import { User } from '@modules/users/domain/entities/user.entity';
-import { UserDocument, UserModel } from '../adapters/persistence/schema/user.schema';
-import { Types } from 'mongoose'; 
+import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
+import { UserDocument } from '../adapters/persistence/schema/user.schema';
+import { Types } from 'mongoose';
 
 export class UserMapper {
-  static toDomain(user: UserDocument): User {
-    return new User(
-      (user as any)._id,
-      user.email,
-      user.name,
-      user.bio,
-      user.avatar,
-      
-    );
-  }
+    static toDomain(userDoc: UserDocument): User {
+            const userId = UserId.create((userDoc._id as any).toString());
+            return new User({
+                id: userId,
+                email: userDoc.email,
+                name: userDoc.name,
+                avatar: userDoc.avatar,
+            });
+    }
 
-  static toPersistence(entity: User): Partial<UserDocument> {
-    return {
-      email: entity.email,
-      name: entity.name,
-      bio: entity.bio,
-      avatar: entity.avatar,
-	}
-  }
+
+    static toPersistence(user: User): Partial<UserDocument> {
+            return {
+                _id: new Types.ObjectId(user.getId().getValue()),
+                email: user.getEmail(),
+                name: user.getName(),
+                avatar: user.getAvatarUrl(),
+            };
+    }
+
+
+    static toPersistenceCreate(user: User): Partial<UserDocument> {
+            return {
+                email: user.getEmail(),
+                name: user.getName(),
+                avatar: user.getAvatarUrl(),
+            };
+    }
+
+
+    static toPersistenceUpdate(user: User): Partial<UserDocument> {
+            return {
+                name: user.getName(),
+                avatar: user.getAvatarUrl(),
+            };
+    }
+
 }

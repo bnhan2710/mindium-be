@@ -3,10 +3,11 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
 import { GetUserProfileQuery } from '../../application/queries/implements/get-user-profile.query';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetFollowerQuery } from '../../application/queries/implements/get-follower.query';
 import { ObjectIdValidationPipe } from '@shared/common/pipes/object-id-validation.pipe';
 import { GetFollowingQuery } from '../../application/queries/implements/get-following.query';
+import { UserResponseDto } from '@modules/users/application/dtos/user-application.dto';
 
 @ApiTags('Users')
 @Controller({
@@ -18,18 +19,37 @@ export class UserController {
 		private readonly queryBus: QueryBus,
 		private readonly commandBus: CommandBus,
 	) {}
-
 	@Get(':userId')
-	async getUserProfile(@Param('userId', ObjectIdValidationPipe) userId: string) {
-		return await this.queryBus.execute(new GetUserProfileQuery(userId))
+	@ApiOperation({ summary: 'Get user profile' })
+	@ApiResponse({
+		status: 200,
+		description: 'User profile retrieved successfully',
+		type: UserResponseDto,
+	})
+	async getUserProfile(@Param('userId', ObjectIdValidationPipe) userId: string) : Promise<UserResponseDto> {
+		return await this.queryBus.execute(new GetUserProfileQuery(userId));
 	}
 
 	@Get('followers/:userId')
+	@ApiOperation({ summary: 'Get user followers' })
+	@ApiResponse({
+		status: 200,
+		description: 'User followers retrieved successfully',
+		type: UserResponseDto,
+		isArray: true,
+	})
 	async getFollowers(@Param('userId', ObjectIdValidationPipe) userId: string) {
 		return await this.queryBus.execute(new GetFollowerQuery(userId));
 	}
 
 	@Get('followings/:userId')
+	@ApiOperation({ summary: 'Get user followings' })
+	@ApiResponse({
+		status: 200,
+		description: 'User followings retrieved successfully',
+		type: UserResponseDto,
+		isArray: true,
+	})
 	async getFollowings(@Param('userId', ObjectIdValidationPipe) userId: string) {
 		return await this.queryBus.execute(new GetFollowingQuery(userId));
 	}

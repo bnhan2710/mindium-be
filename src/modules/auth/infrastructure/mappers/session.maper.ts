@@ -9,6 +9,7 @@ export class SessionMapper {
 	static toDomain(session: SessionDocument): Session {
 		return Session.create(session.userID.toString());
 	}
+
 	static toPersistence(session: Session): SessionDocument {
 		return {
 			sessionID: session.getSessionId().toString(),

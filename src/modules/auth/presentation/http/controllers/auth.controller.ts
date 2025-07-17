@@ -2,11 +2,12 @@ import { Body, Controller, Get, Post, Query, Redirect, Res } from '@nestjs/commo
 import { ApiTags } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
 import { ExchangeTokenCommand } from '../../../application/commands/implements/exchange-token.command';
-import { EnvironmentKeyFactory } from '@shared/services';
 import { LogoutCommand } from '../../../application/commands/implements/logout.command';
 import { RefreshTokenCommand } from '../../../application/commands/implements/refresh-token.command';
 import { TokenPair } from '../../../domain/value-objects/token-pair.vo';
 import { ExchangeGoogleTokenDto, RefreshTokenDto, LogoutDto } from '../dtos';
+import { TokenResponseDto } from '@modules/auth/application/dtos';
+import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
 
 @ApiTags('Auth')
 @Controller({
@@ -42,8 +43,8 @@ export class AuthController {
 	}
 
 	@Post('refresh')
-	async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenPair> {
-		const tokenPair : TokenPair = await this.commandBus.execute(
+	async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenResponseDto> {
+		const tokenPair: TokenPair = await this.commandBus.execute(
 			new RefreshTokenCommand(refreshTokenDto.refresh_token),
 		);
 		return tokenPair;

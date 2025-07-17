@@ -3,9 +3,8 @@ import { GetUserProfileQuery } from '../implements/get-user-profile.query';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
 import { Inject } from '@nestjs/common';
 import { USER_DI_TOKENS } from '@modules/users/user.di-tokens';
-import { UserApplicationDto } from '../../dtos/user-application.dto';
-import { UserNotFoundError } from '@modules/users/domain/errors';
-
+import { UserResponseDto } from '../../dtos/user-application.dto';
+import { UserNotFoundError } from '@modules/users/domain/exceptions';
 
 @QueryHandler(GetUserProfileQuery)
 export class GetUserProfileQueryHandler implements IQueryHandler<GetUserProfileQuery> {
@@ -14,7 +13,7 @@ export class GetUserProfileQueryHandler implements IQueryHandler<GetUserProfileQ
 		private readonly userRepository: IUserRepository,
 	) {}
 
-	async execute(query: GetUserProfileQuery): Promise<UserApplicationDto> {
+	async execute(query: GetUserProfileQuery): Promise<UserResponseDto> {
 		const { userId } = query;
 		const user = await this.userRepository.findById(userId);
 
@@ -22,6 +21,6 @@ export class GetUserProfileQueryHandler implements IQueryHandler<GetUserProfileQ
 			throw new UserNotFoundError(userId);
 		}
 
-		return UserApplicationDto.fromDomain(user);
+		return UserResponseDto.fromDomain(user);
 	}
 }

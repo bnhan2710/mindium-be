@@ -9,6 +9,6 @@ export interface IUserRepository {
 	createUserIfNotExists(
 		email: string,
 		name: string,
-		avatar?: string,
+		avatar?: string | null,
 	): Promise<User>;
 }

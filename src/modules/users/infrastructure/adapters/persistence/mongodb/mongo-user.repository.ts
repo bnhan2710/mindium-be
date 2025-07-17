@@ -37,11 +37,14 @@ export class MongoUserRepository implements IUserRepository {
 			.populate({
 				path: 'followers',
 				select: 'name avatar email',
-			}).exec();
+			})
+			.exec();
 		if (!userDoc) {
 			return null;
 		}
-		return userDoc.followers.map(follower => UserMapper.toDomain(follower as unknown as UserDocument));
+		return userDoc.followers.map((follower) =>
+			UserMapper.toDomain(follower as unknown as UserDocument),
+		);
 	}
 
 	async findByIdWithFollowings(userId: string): Promise<User[] | null> {
@@ -50,13 +53,15 @@ export class MongoUserRepository implements IUserRepository {
 			.populate({
 				path: 'followings',
 				select: 'name avatar email',
-			}).exec();
+			})
+			.exec();
 		if (!userDoc) {
 			return null;
 		}
-		return userDoc.followings.map(following => UserMapper.toDomain(following as unknown as UserDocument));
+		return userDoc.followings.map((following) =>
+			UserMapper.toDomain(following as unknown as UserDocument),
+		);
 	}
-
 
 	async createUserIfNotExists(
 		email: string,

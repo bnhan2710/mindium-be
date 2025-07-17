@@ -2,18 +2,16 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ExchangeTokenCommand } from '../implements/exchange-token.command';
 import { TokenPair } from '@modules/auth/domain/value-objects/token-pair.vo';
 import { IOAuthProvider } from '@modules/auth/domain/ports/oauth/oauth-provider';
-import { AuthService } from '@modules/auth/application/services/authentication-application.service';
+import { AuthService } from '@modules/auth/domain/services/authentication-domain.service';
 import { Inject } from '@nestjs/common';
 import { AUTH_DI_TOKENS } from '@modules/auth/auth.di-tokens';
 import { USER_DI_TOKENS } from '@modules/users/user.di-tokens';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
 import { UnauthorizedException } from '@nestjs/common';
-import { TokenApplicationDto } from '../../dtos/response';
+import { TokenResponseDto } from '../../dtos';
 
 @CommandHandler(ExchangeTokenCommand)
-export class LoginCommandHandler
-	implements ICommandHandler<ExchangeTokenCommand>
-{
+export class ExchangeTokenCommandHandler implements ICommandHandler<ExchangeTokenCommand> {
 	constructor(
 		@Inject(AUTH_DI_TOKENS.OAUTH_PROVIDER)
 		private readonly oAuthProvider: IOAuthProvider,
@@ -22,7 +20,7 @@ export class LoginCommandHandler
 
 		private readonly authService: AuthService,
 	) {}
-	async execute(command: ExchangeTokenCommand): Promise<TokenApplicationDto> {
+	async execute(command: ExchangeTokenCommand): Promise<TokenResponseDto> {
 		const { code } = command;
 
 		const idpToken = await this.oAuthProvider.exchangeAuthorizationCode(code);
@@ -43,10 +41,10 @@ export class LoginCommandHandler
 		);
 
 		const tokenPair = await this.authService.createSessionAndTokens({
-			id: user.id,
-			email: user.email,
-			name: user.name,
-			picture: user.avatar,
+			id: user.getId().getValue(),
+			email: user.getEmail(),
+			name: user.getName(),
+			picture: user.getAvatarUrl(),
 		});
 
 		return tokenPair;

@@ -3,8 +3,8 @@ import { GetFollowerQuery } from '../implements/get-follower.query';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
 import { Inject } from '@nestjs/common';
 import { USER_DI_TOKENS } from '@modules/users/user.di-tokens';
-import { UserApplicationDto } from '../../dtos/user-application.dto';
-import { UserNotFoundError } from '@modules/users/domain/errors';
+import { UserResponseDto } from '../../dtos/user-application.dto';
+import { UserNotFoundError } from '@modules/users/domain/exceptions';
 
 @QueryHandler(GetFollowerQuery)
 export class GetFollowerQueryHandler implements IQueryHandler<GetFollowerQuery> {
@@ -12,13 +12,12 @@ export class GetFollowerQueryHandler implements IQueryHandler<GetFollowerQuery> 
 		@Inject(USER_DI_TOKENS.USER_REPOSITORY)
 		private readonly userRepository: IUserRepository,
 	) {}
-	async execute(query: GetFollowerQuery): Promise<UserApplicationDto[]> {
+	async execute(query: GetFollowerQuery): Promise<UserResponseDto[]> {
 		const { userId } = query;
 		const followers = await this.userRepository.findByIdWithFollowers(userId);
 		if (!followers) {
 			throw new UserNotFoundError(userId);
 		}
-		return UserApplicationDto.fromDomainList(followers);
-
+		return UserResponseDto.fromDomainList(followers);
 	}
 }

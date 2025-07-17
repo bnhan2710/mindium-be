@@ -11,7 +11,11 @@ import { GetUserProfileQueryHandler } from './application/queries/handlers/get-u
 import { GetFollowerQueryHandler } from './application/queries/handlers/get-follower.handler';
 import { GetFollowingQueryHandler } from './application/queries/handlers/get-folllowing.handler';
 
-const QueryHandlers = [GetUserProfileQueryHandler,GetFollowerQueryHandler,GetFollowingQueryHandler];
+const QueryHandlers = [
+	GetUserProfileQueryHandler,
+	GetFollowerQueryHandler,
+	GetFollowingQueryHandler,
+];
 
 const Repositories = [
 	{
