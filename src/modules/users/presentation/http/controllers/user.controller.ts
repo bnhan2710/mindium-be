@@ -1,13 +1,15 @@
-import { Inject } from '@nestjs/common';
+import { Body, Inject, Post } from '@nestjs/common';
 import { Controller, Get, Param } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
-import { GetUserProfileQuery } from '../../application/queries/implements/get-user-profile.query';
+import { GetUserProfileQuery } from '../../../application/queries/implements/get-user-profile.query';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GetFollowerQuery } from '../../application/queries/implements/get-follower.query';
+import { GetFollowerQuery } from '../../../application/queries/implements/get-follower.query';
 import { ObjectIdValidationPipe } from '@shared/common/pipes/object-id-validation.pipe';
-import { GetFollowingQuery } from '../../application/queries/implements/get-following.query';
-import { UserResponseDto } from '@modules/users/application/dtos/user-application.dto';
+import { GetFollowingQuery } from '../../../application/queries/implements/get-following.query';
+import { UserResponseDto } from '@modules/users/application/dtos/user-response.dto';
+import { CreateUserCommand } from '@modules/users/application/commands/implements/create-user.command';
+import { CreateUserRequestDto, UpdateUserRequestDto } from '../dtos';
 
 @ApiTags('Users')
 @Controller({
@@ -19,6 +21,18 @@ export class UserController {
 		private readonly queryBus: QueryBus,
 		private readonly commandBus: CommandBus,
 	) {}
+
+	@Post()
+	@ApiOperation({ summary: 'Create a new user' })
+	@ApiResponse({
+		status: 201,
+		description: 'User created successfully',
+	})
+	async createUser(@Body() createUserDto: CreateUserRequestDto) {
+		const { email, name, avatar } = createUserDto;
+		await this.commandBus.execute(new CreateUserCommand(email, name, avatar));
+	}
+
 	@Get(':userId')
 	@ApiOperation({ summary: 'Get user profile' })
 	@ApiResponse({

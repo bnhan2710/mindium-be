@@ -52,4 +52,6 @@ export class GetPostResponseDto {
 	})
 	public readonly createdAt: Date;
 	public updatedAt: Date;
+
+
 }

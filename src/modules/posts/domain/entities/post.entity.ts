@@ -1,44 +1,41 @@
 import { SlugGenerator } from '@shared/services';
 import { Slug } from '../value-objects/slug';
 import { Tag } from '../value-objects/tag';
+import { PostId } from '../value-objects/post-id';
+import { v4 } from 'uuid';
 
-export class PostEntity {
-	public readonly id: string;
-	public title: string;
-	public content: string;
-	public author: string;
-	public slug: Slug;
-	public tags: Tag[];
-	public summary: string;
-	public readonly createdAt: Date;
-	public updatedAt: Date;
 
-	constructor(
-		id: string,
-		title: string,
-		content: string,
-		author: string,
-		tags: string[],
-		createdAt: Date = new Date(),
-		updatedAt: Date = new Date(),
-	) {
-		this.id = id;
-		this.title = title;
-		this.content = content;
-		this.tags = tags.map((tag) => Tag.create(tag));
-		this.summary = this.generatePostSummary(content);
-		this.slug = Slug.createFromTitle(title);
-		this.author = author;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+export interface PostProps {
+	id: PostId;
+	 title: string;
+	 content: string;
+	 author: string;
+	 slug: Slug;
+	 tags: Tag[];
+	 summary: string;
+}
+export class Post {
+
+	private readonly props: PostProps;
+	constructor(props: PostProps) {
+		if (!props.id || !props.title || !props.content || !props.author) {
+			throw new Error('Post must have an id, title, content, and author');
+		}
+		this.props = props;
 	}
 
 	public static create(
-		title: string,
-		content: string,
-		author: string,
-		tags: string[],
-	) {}
+		props: Omit<PostProps, 'id'>,
+		id?: PostId
+	): Post {
+		return new Post({
+			id: id || PostId.create(v4()),
+			...props,
+			slug: Slug.createFromTitle(props.title),
+			tags: props.tags || [],
+			summary: props.summary || '',
+		});
+	}
 
 	public generatePostSummary(markdownContent, maxLength = 150) {
 		// Remove code blocks and HTML tags from the markdown content
@@ -65,14 +62,17 @@ export class PostEntity {
 	}
 
 	public addTag(tag: Tag): void {
-		if (!this.tags.some((t) => t.getValue() === tag.getValue())) {
-			this.tags.push(tag);
-			this.updatedAt = new Date();
+		if (this.props.tags.some((t) => t.getValue() === tag.getValue())) {
+			throw new Error('Tag already exists');
 		}
+		this.props.tags.push(tag);
 	}
 
 	public removeTag(tag: Tag): void {
-		this.tags = this.tags.filter((t) => t.getValue() !== tag.getValue());
-		this.updatedAt = new Date();
+		const index = this.props.tags.findIndex((t) => t.getValue() === tag.getValue());
+		if (index === -1) {
+			throw new Error('Tag not found');
+		}
+		this.props.tags.splice(index, 1);
 	}
 }

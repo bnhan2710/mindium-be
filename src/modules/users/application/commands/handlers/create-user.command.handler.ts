@@ -3,9 +3,12 @@ import { CreateUserCommand } from '../implements/create-user.command';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
 import { User } from '@modules/users/domain/entities/user.entity';
 import { UserAlreadyExistsError } from '@modules/users/domain/exceptions/user-already-exists.error';
+import { Inject } from '@nestjs/common';
+import { USER_DI_TOKENS } from '@modules/users/user.di-tokens';
 @CommandHandler(CreateUserCommand)
 export class CreateUserCommandHandler implements ICommandHandler<CreateUserCommand> {
 	constructor(
+		@Inject(USER_DI_TOKENS.USER_REPOSITORY)
 		private readonly userRepository: IUserRepository,
 	) {}
 

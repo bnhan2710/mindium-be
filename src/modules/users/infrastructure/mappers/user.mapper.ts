@@ -7,12 +7,11 @@ import { Types } from 'mongoose';
 export class UserMapper {
     static toDomain(userDoc: UserDocument): User {
             const userId = UserId.create((userDoc._id as any).toString());
-            return new User({
-                id: userId,
+            return User.create({
                 email: userDoc.email,
                 name: userDoc.name,
                 avatar: userDoc.avatar,
-            });
+            }, userId);
     }
 
 

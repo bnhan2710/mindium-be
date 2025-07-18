@@ -17,7 +17,7 @@ export class MongoUserRepository implements IUserRepository {
 	) {}
 
 	async save(user: User): Promise<void> {
-		const userDoc = UserMapper.toPersistence(user);
+		const userDoc = UserMapper.toPersistenceCreate(user);
 		await this.userModel.create(userDoc);
 	}
 
@@ -81,5 +81,9 @@ export class MongoUserRepository implements IUserRepository {
 
 		const savedUser = await newUser.save();
 		return UserMapper.toDomain(savedUser);
+	}
+
+	update(user: Partial<User>): Promise<void> {
+		throw new Error('Method not implemented.');
 	}
 }

@@ -6,8 +6,6 @@ export interface UserProps{
 	email: string;
 	name: string;
 	avatar?: string;
-	createdAt?: Date;
-    updatedAt?:Date;
 }
 
 export class User {
@@ -16,18 +14,15 @@ export class User {
 	
 	constructor(props: UserProps) {
 		if (!props.id || !props.email || !props.name) {
-			throw new Error('User must have an id, email, and name');
+			throw new InvalidUserDataError('User must have an id, email, and name');
 		}
 		this.props = props;
 	}
 
-	public static create(props: Omit<UserProps, 'createdAt' | 'updatedAt' | 'id'>, id?: UserId): User {
-        const now = new Date();
+	public static create(props: Omit<UserProps, 'id'>, id?: UserId): User {
         return new User({
             id: id || UserId.create(v4()), 
             ...props,
-            createdAt: now,
-            updatedAt: now,
         });
     }
 
@@ -48,13 +43,6 @@ export class User {
 		return this.props.name;
 	}
 
-	public getCreatedAt() {
-		return this.props.createdAt;
-	}
-
-	public getUpdatedAt() {
-		return this.props.updatedAt;
-	}
 
 	public updateProfile (name: string, avatar?: string) {
 		if(!name && !avatar) {
@@ -69,8 +57,6 @@ export class User {
 		if (avatar) {
 			this.props.avatar = avatar;
 		}
-		this.props.updatedAt = new Date();
 	}
-
 
 }
