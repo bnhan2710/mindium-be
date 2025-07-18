@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './presentation/http/controllers/auth.controller';
 import { AUTH_TOKENS } from './auth.tokens';
-import { USER_TOKENS } from '@modules/users/user.tokens';
 import { GoogleIdentityBroker } from './infrastructure/adapters/security/oauth/google-identity-broker';
 import { ExchangeTokenCommandHandler } from './application/commands/handlers/exchange-token.command-handler';
 import { LogoutCommandHandler } from './application/commands/handlers/logout.command-handler';
@@ -13,11 +12,7 @@ import {
 	SessionModel,
 	SessionSchema,
 } from './infrastructure/adapters/persistence/schema/session.schema';
-import { MongoUserRepository } from '@modules/users/infrastructure/adapters/persistence/mongodb/mongo-user.repository';
-import {
-	UserModel,
-	UserSchema,
-} from '@modules/users/infrastructure/adapters/persistence/schema/user.schema';
+import { UserModule } from '@modules/users/user.module';
 import { AuthService } from './domain/services/authentication-domain.service';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -28,10 +23,6 @@ const commandHandlers = [
 ];
 
 const repositories = [
-	{
-		provide: USER_TOKENS.USER_REPOSITORY,
-		useClass: MongoUserRepository,
-	},
 	{
 		provide: AUTH_TOKENS.SESSION_REPOSITORY,
 		useClass: MongoSessionRepository,
@@ -51,9 +42,9 @@ const authProviders = [
 
 @Module({
 	imports: [
+		UserModule,
 		MongooseModule.forFeature([
 			{ name: SessionModel.name, schema: SessionSchema },
-			{ name: UserModel.name, schema: UserSchema },
 		]),
 		JwtModule.register({}),
 	],

@@ -11,6 +11,8 @@ import { GetUserProfileQueryHandler } from './application/queries/handlers/get-u
 import { GetFollowerQueryHandler } from './application/queries/handlers/get-follower.query-handler';
 import { GetFollowingQueryHandler } from './application/queries/handlers/get-folllowing.query-handler';
 import { CreateUserCommandHandler } from './application/commands/handlers/create-user.command.handler';
+import { CreateUserIfNotExistCommandHandler } from './application/commands/handlers/create-user-if-not-exist.command-handler';
+import { CQRSModule } from '@shared/cqrs/cqrs.module';
 
 const QueryHandlers = [
 	GetUserProfileQueryHandler,
@@ -18,7 +20,10 @@ const QueryHandlers = [
 	GetFollowingQueryHandler,
 ];
 
-const CommandHandlers = [CreateUserCommandHandler];
+const CommandHandlers = [
+	CreateUserCommandHandler,
+	CreateUserIfNotExistCommandHandler
+];
 
 const Repositories = [
 	{
@@ -28,7 +33,9 @@ const Repositories = [
 ];
 
 @Module({
-	imports: [MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }])],
+	imports: [
+		CQRSModule,
+		MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }])],
 	providers: [
 		...CommandHandlers,
 		...QueryHandlers,

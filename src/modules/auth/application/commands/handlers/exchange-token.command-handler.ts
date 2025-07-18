@@ -1,54 +1,51 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs'; // Thêm ICommandBus
 import { ExchangeTokenCommand } from '../implements/exchange-token.command';
-import { TokenPair } from '@modules/auth/domain/value-objects/token-pair.vo';
 import { IOAuthProvider } from '@modules/auth/domain/ports/oauth/oauth-provider';
 import { AuthService } from '@modules/auth/domain/services/authentication-domain.service';
-import { Inject } from '@nestjs/common';
+import { Inject, UnauthorizedException } from '@nestjs/common';
 import { AUTH_TOKENS } from '@modules/auth/auth.tokens';
-import { USER_TOKENS } from '@modules/users/user.tokens';
-import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
-import { UnauthorizedException } from '@nestjs/common';
 import { TokenResponseDto } from '../../dtos';
-
+import { CreateUserIfNotExistCommand } from '@modules/users/application/commands/implements/create-user-if-not-exist.command'; 
 @CommandHandler(ExchangeTokenCommand)
 export class ExchangeTokenCommandHandler
-	implements ICommandHandler<ExchangeTokenCommand>
+    implements ICommandHandler<ExchangeTokenCommand>
 {
-	constructor(
-		@Inject(AUTH_TOKENS.OAUTH_PROVIDER)
-		private readonly oAuthProvider: IOAuthProvider,
-		@Inject(USER_TOKENS.USER_REPOSITORY)
-		private readonly userRepository: IUserRepository,
+    constructor(
+        @Inject(AUTH_TOKENS.OAUTH_PROVIDER)
+        private readonly oAuthProvider: IOAuthProvider,
+        private readonly authService: AuthService,
+        private readonly commandBus: CommandBus,
+    ) {}
 
-		private readonly authService: AuthService,
-	) {}
-	async execute(command: ExchangeTokenCommand): Promise<TokenResponseDto> {
-		const { code } = command;
+    async execute(command: ExchangeTokenCommand): Promise<TokenResponseDto> {
+        const { code } = command;
 
-		const idpToken = await this.oAuthProvider.exchangeAuthorizationCode(code);
+        const idpToken = await this.oAuthProvider.exchangeAuthorizationCode(code);
 
-		if (!idpToken || !idpToken.idToken || !idpToken.accessToken) {
-			throw new UnauthorizedException('Invalid or expired authorization code');
-		}
+        if (!idpToken || !idpToken.idToken || !idpToken.accessToken) {
+            throw new UnauthorizedException('Invalid or expired authorization code');
+        }
 
-		const userProfile = await this.oAuthProvider.fetchProfile({
-			idToken: idpToken.idToken,
-			accessToken: idpToken.accessToken,
-		});
+        const userProfile = await this.oAuthProvider.fetchProfile({
+            idToken: idpToken.idToken,
+            accessToken: idpToken.accessToken,
+        });
 
-		const user = await this.userRepository.createUserIfNotExists(
-			userProfile.email,
-			userProfile.name,
-			userProfile.picture,
-		);
+        const user = await this.commandBus.execute(
+            new CreateUserIfNotExistCommand( 
+                userProfile.email,
+                userProfile.name,
+                userProfile.picture,
+            ),
+        );
 
-		const tokenPair = await this.authService.createSessionAndTokens({
-			id: user.getId().getValue(),
-			email: user.getEmail(),
-			name: user.getName(),
-			picture: user.getAvatarUrl(),
-		});
+        const tokenPair = await this.authService.createSessionAndTokens({
+            id: user.getId().getValue(),
+            email: user.getEmail(),
+            name: user.getName(),
+            picture: user.getAvatarUrl(),
+        });
 
-		return tokenPair;
-	}
+        return tokenPair;
+    }
 }
