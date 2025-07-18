@@ -1,6 +1,6 @@
-import { PostEntity } from "../../entities/post.entity";
+import { Post } from '../../entities/post.entity';
 
 export interface IPostRepository {
-    findById(postId: string): Promise<PostEntity | null>;
-    save(post: PostEntity): Promise<void>;
+	findById(postId: string): Promise<Post | null>;
+	save(post: Post): Promise<void>;
 }

@@ -1,14 +1,15 @@
-import { UserEntity } from '../../entities/user.entity';
+import { User } from '../../entities/user.entity';
 
 export interface IUserRepository {
-	findById(id: string): Promise<UserEntity | null>;
-	findByEmail(email: string): Promise<UserEntity | null>;
-	findByIdWithFollowers(userId: string): Promise<UserEntity[] | null>;
-	findByIdWithFollowings(userId: string): Promise<UserEntity[] | null>;
-	save(user: UserEntity): Promise<void>;
+	save(user: User): Promise<void>;
 	createUserIfNotExists(
 		email: string,
 		name: string,
-		avatar?: string,
-	): Promise<UserEntity>;
+		avatar?: string | null,
+	): Promise<User>;
+	update(user: Partial<User>): Promise<void>;
+	findById(id: string): Promise<User | null>;
+	findByEmail(email: string): Promise<User | null>;
+	findByIdWithFollowers(userId: string): Promise<User[] | null>;
+	findByIdWithFollowings(userId: string): Promise<User[] | null>;
 }

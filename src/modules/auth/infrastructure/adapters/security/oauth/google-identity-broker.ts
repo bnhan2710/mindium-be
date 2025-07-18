@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { EnvironmentKeyFactory } from '@shared/services';
+import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
 import { IOAuthProvider } from '@modules/auth/domain/ports/oauth/oauth-provider';
 import axios from 'axios';
 import * as qs from 'qs';
-import { Console } from 'console';
 
 export interface GoogleTokenResponse {
 	accessToken: string;

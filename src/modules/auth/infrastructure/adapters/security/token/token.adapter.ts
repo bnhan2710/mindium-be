@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ITokenPort } from '../../../../domain/ports/token/token.port';
-import { EnvironmentKeyFactory } from '@shared/services';
+import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
 import * as jwt from 'jsonwebtoken';
 
 @Injectable()

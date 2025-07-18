@@ -1,4 +1,4 @@
-import { SessionEntity } from '../../domain/entities/session.entity';
+import { Session } from '../../domain/entities/session.entity';
 import {
 	SessionDocument,
 	SessionSchema,
@@ -6,16 +6,14 @@ import {
 import { Injectable } from '@nestjs/common';
 @Injectable()
 export class SessionMapper {
-	static toDomain(session: SessionDocument): SessionEntity {
-		return new SessionEntity({
-			sessionId: session.sessionID,
-			userId: session.userID,
-		});
+	static toDomain(session: SessionDocument): Session {
+		return Session.create(session.userID.toString());
 	}
-	static toPersistence(session: SessionEntity): SessionDocument {
+
+	static toPersistence(session: Session): SessionDocument {
 		return {
-			sessionID: session.sessionId,
-			userID: session.userId,
+			sessionID: session.getSessionId().toString(),
+			userID: session.getUserId().toString(),
 		} as SessionDocument;
 	}
 }

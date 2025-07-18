@@ -1,14 +1,17 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { commonConfig } from 'src/configs/common.config';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { setupSwagger } from 'src/configs/swagger';
 import { GlobalExceptionFilter } from '@shared/common/exceptions/exception.filter';
 import * as morgan from 'morgan';
+import { TransformInterceptor } from '@shared/common/interceptors/transform.interceptor';
+import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+	const commonConfig = app.get(EnvironmentKeyFactory).getCommonConfig();
 
 	app.enableCors({
 		origin: commonConfig.corsOrigin,
@@ -17,6 +20,8 @@ async function bootstrap() {
 		credentials: true,
 	});
 
+	const reflector = app.get(Reflector);
+	// app.useGlobalInterceptors(new TransformInterceptor(reflector));
 	app.useGlobalFilters(new GlobalExceptionFilter());
 	app.useGlobalPipes(new ValidationPipe());
 	app.setGlobalPrefix('api');
@@ -29,7 +34,7 @@ async function bootstrap() {
 
 	app.use(morgan('combined'));
 
-	const PORT = commonConfig.PORT;
+	const PORT = commonConfig.port;
 	await app.listen(PORT, () => {
 		Logger.log(`Server is listening on PORT: ${PORT}`);
 	});

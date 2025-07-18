@@ -14,3 +14,5 @@ export interface IOAuthProvider {
 	exchangeAuthorizationCode(code: string): Promise<IDPToken>;
 	fetchProfile(idpToken: IDPToken): Promise<UserProfile>;
 }
+
+
