@@ -1,57 +1,33 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Post } from '@modules/posts/domain/entities/post.entity';
 
-export type PostAuthor =
-	| string
-	| {
-			id: string;
-			name: string;
-			email: string;
-			avatar?: string | null;
-	  };
-
-export class GetPostResponseDto {
-	@ApiProperty({
-		description: 'The unique identifier of the post',
-		example: 'clv6r49o40000j6q51234abcd',
-	})
+export class PostResponseDto {
 	public readonly id: string;
+	public readonly title: string;
+	public readonly content: string;
+	public readonly tags: string[];
+	public readonly author: string;
 
-	@ApiProperty({
-		description: 'The title of the post',
-		example: 'Understanding CQRS in NestJS',
-	})
-	public title: string;
+	private constructor(
+		id: string,
+		title: string,
+		content: string,
+		tags: string[],
+		author: string,
+	) {
+		this.id = id;
+		this.title = title;
+		this.content = content;
+		this.tags = tags;
+		this.author = author;
+	}
 
-	@ApiProperty({
-		description: 'The content of the post in HTML format',
-		example: '<p>This is a detailed explanation of CQRS...</p>',
-	})
-	public: string;
-
-	@ApiProperty({
-		description: 'The author of the post',
-		example: 'John Doe',
-	})
-	public author: string | PostAuthor;
-
-	@ApiProperty({
-		description: 'The tags associated with the post',
-		example: ['nestjs', 'cqrs', 'hexagonal architecture'],
-		type: [String],
-	})
-	public tags: string[];
-
-	@ApiProperty({
-		description: 'A brief summary of the post',
-		example: 'This post explains the concepts of CQRS in NestJS.',
-	})
-	public summary: string;
-	@ApiProperty({
-		description: 'The date and time when the post was created',
-		example: '2023-10-01T12:00:00Z',
-	})
-	public readonly createdAt: Date;
-	public updatedAt: Date;
-
-
+	static fromDomain(post: Post): PostResponseDto {
+		return new PostResponseDto(
+			post.getId().getValue(),
+			post.getTitle(),
+			post.getContent(),
+			post.getTags().map((tag) => tag.getValue()),
+			post.getAuthor(),
+		);
+	}
 }

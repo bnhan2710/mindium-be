@@ -3,14 +3,14 @@ import { QueryHandler } from '@nestjs/cqrs';
 import { GetFollowingQuery } from '../implements/get-following.query';
 import { Inject, NotFoundException } from '@nestjs/common';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
-import { USER_DI_TOKENS } from '@modules/users/user.di-tokens';
+import { USER_TOKENS } from '@modules/users/user.tokens';
 import { UserResponseDto } from '../../dtos/user-response.dto';
 import { UserNotFoundError } from '@modules/users/domain/exceptions';
 
 @QueryHandler(GetFollowingQuery)
 export class GetFollowingQueryHandler implements IQueryHandler<GetFollowingQuery> {
 	constructor(
-		@Inject(USER_DI_TOKENS.USER_REPOSITORY)
+		@Inject(USER_TOKENS.USER_REPOSITORY)
 		private readonly userRepository: IUserRepository,
 	) {}
 

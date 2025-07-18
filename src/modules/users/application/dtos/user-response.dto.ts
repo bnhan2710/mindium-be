@@ -14,7 +14,12 @@ export class UserResponseDto {
 	}
 
 	static fromDomain(user: User): UserResponseDto {
-		return new UserResponseDto(user.getId().getValue(), user.getEmail(), user.getName(), user.getAvatarUrl());
+		return new UserResponseDto(
+			user.getId().getValue(),
+			user.getEmail(),
+			user.getName(),
+			user.getAvatarUrl(),
+		);
 	}
 
 	static fromDomainList(users: User[]): UserResponseDto[] {

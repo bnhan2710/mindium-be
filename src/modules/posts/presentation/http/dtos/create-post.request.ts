@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, MinLength } from 'class-validator';
 
-export class CreatePostDto {
+export class CreatePostRequestDto {
 	@ApiProperty({
 		description: 'The title of the post',
 		example: 'Understanding CQRS in NestJS',
@@ -23,4 +23,11 @@ export class CreatePostDto {
 	})
 	@IsNotEmpty()
 	content: string;
+
+	@ApiProperty({
+		description: 'An array of tags associated with the post',
+		example: ['nestjs', 'cqrs', 'hexagonal-architecture'],
+	})
+	@IsString({ each: true })
+	tags: string[];
 }

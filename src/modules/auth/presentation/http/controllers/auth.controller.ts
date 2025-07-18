@@ -43,7 +43,9 @@ export class AuthController {
 	}
 
 	@Post('refresh')
-	async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenResponseDto> {
+	async refreshToken(
+		@Body() refreshTokenDto: RefreshTokenDto,
+	): Promise<TokenResponseDto> {
 		const tokenPair: TokenPair = await this.commandBus.execute(
 			new RefreshTokenCommand(refreshTokenDto.refresh_token),
 		);

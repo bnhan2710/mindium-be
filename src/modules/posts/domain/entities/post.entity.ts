@@ -1,21 +1,19 @@
 import { SlugGenerator } from '@shared/services';
 import { Slug } from '../value-objects/slug';
-import { Tag } from '../value-objects/tag';
 import { PostId } from '../value-objects/post-id';
+import { Tag } from '../value-objects/tag';
 import { v4 } from 'uuid';
-
 
 export interface PostProps {
 	id: PostId;
-	 title: string;
-	 content: string;
-	 author: string;
-	 slug: Slug;
-	 tags: Tag[];
-	 summary: string;
+	title: string;
+	content: string;
+	author: string;
+	slug: Slug;
+	tags: Tag[];
+	summary: string;
 }
 export class Post {
-
 	private readonly props: PostProps;
 	constructor(props: PostProps) {
 		if (!props.id || !props.title || !props.content || !props.author) {
@@ -25,19 +23,26 @@ export class Post {
 	}
 
 	public static create(
-		props: Omit<PostProps, 'id'>,
-		id?: PostId
+		title: string,
+		content: string,
+		tags: string[] = [],
+		author: string,
+		id?: PostId,
 	): Post {
+		const slug = Slug.createFromTitle(title);
+		const tagObjects = tags.map((tag) => Tag.create(tag));
 		return new Post({
 			id: id || PostId.create(v4()),
-			...props,
-			slug: Slug.createFromTitle(props.title),
-			tags: props.tags || [],
-			summary: props.summary || '',
+			title,
+			content,
+			author,
+			slug,
+			tags: tagObjects,
+			summary: Post.generatePostSummary(content, 150),
 		});
 	}
 
-	public generatePostSummary(markdownContent, maxLength = 150) {
+	static generatePostSummary(markdownContent, maxLength = 150) {
 		// Remove code blocks and HTML tags from the markdown content
 		const codeRegex = /<code[^>]*>.*?<\/code>/gs;
 		const withoutCode = markdownContent.replace(codeRegex, '');
@@ -57,22 +62,58 @@ export class Post {
 		return summary;
 	}
 
+	public toPrimitives() {
+		return {
+			id: this.props.id.getValue(),
+			title: this.props.title,
+			content: this.props.content,
+			author: this.props.author,
+			slug: this.props.slug.getValue(),
+			tags: this.props.tags.map((tag) => tag.getValue()),
+			summary: this.props.summary,
+		};
+	}
+
+	public getId(): PostId {
+		return this.props.id;
+	}
+	public getTitle(): string {
+		return this.props.title;
+	}
+	public getContent(): string {
+		return this.props.content;
+	}
+	public getAuthor(): string {
+		return this.props.author;
+	}
+	public getSlug(): Slug {
+		return this.props.slug;
+	}
+	public getTags(): Tag[] {
+		return this.props.tags;
+	}
+
+	public getSummary(): string {
+		return this.props.summary;
+	}
+
 	public generateSlug(title): string {
 		return SlugGenerator.generate(title);
 	}
 
-	public addTag(tag: Tag): void {
-		if (this.props.tags.some((t) => t.getValue() === tag.getValue())) {
+	public addTag(tag: string): void {
+		const newTag = Tag.create(tag);
+		if (this.props.tags.some((t) => t.getValue() === newTag.getValue())) {
 			throw new Error('Tag already exists');
 		}
-		this.props.tags.push(tag);
+		this.props.tags.push(newTag);
 	}
 
-	public removeTag(tag: Tag): void {
-		const index = this.props.tags.findIndex((t) => t.getValue() === tag.getValue());
-		if (index === -1) {
+	public removeTag(tag: string): void {
+		const tagIndex = this.props.tags.findIndex((t) => t.getValue() === tag);
+		if (tagIndex === -1) {
 			throw new Error('Tag not found');
 		}
-		this.props.tags.splice(index, 1);
+		this.props.tags.splice(tagIndex, 1);
 	}
 }

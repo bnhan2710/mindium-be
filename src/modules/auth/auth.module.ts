@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './presentation/http/controllers/auth.controller';
-import { AUTH_DI_TOKENS } from './auth.di-tokens';
-import { USER_DI_TOKENS } from '@modules/users/user.di-tokens';
+import { AUTH_TOKENS } from './auth.tokens';
+import { USER_TOKENS } from '@modules/users/user.tokens';
 import { GoogleIdentityBroker } from './infrastructure/adapters/security/oauth/google-identity-broker';
 import { ExchangeTokenCommandHandler } from './application/commands/handlers/exchange-token.command-handler';
 import { LogoutCommandHandler } from './application/commands/handlers/logout.command-handler';
@@ -29,22 +29,22 @@ const commandHandlers = [
 
 const repositories = [
 	{
-		provide: USER_DI_TOKENS.USER_REPOSITORY,
+		provide: USER_TOKENS.USER_REPOSITORY,
 		useClass: MongoUserRepository,
 	},
 	{
-		provide: AUTH_DI_TOKENS.SESSION_REPOSITORY,
+		provide: AUTH_TOKENS.SESSION_REPOSITORY,
 		useClass: MongoSessionRepository,
 	},
 ];
 
 const authProviders = [
 	{
-		provide: AUTH_DI_TOKENS.TOKEN_PORT,
+		provide: AUTH_TOKENS.TOKEN_PORT,
 		useClass: TokenAdapter,
 	},
 	{
-		provide: AUTH_DI_TOKENS.OAUTH_PROVIDER,
+		provide: AUTH_TOKENS.OAUTH_PROVIDER,
 		useClass: GoogleIdentityBroker,
 	},
 ];

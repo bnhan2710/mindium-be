@@ -4,10 +4,17 @@ export class Tag {
 	}
 
 	public static create(value: string): Tag {
-		return new Tag(value.toLowerCase());
+		return new Tag(Tag.toCapitalized(value));
 	}
 
 	public getValue(): string {
 		return this.value;
+	}
+
+	static toCapitalized(value: string): string {
+		return value
+			.split(' ')
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+			.join(' ');
 	}
 }

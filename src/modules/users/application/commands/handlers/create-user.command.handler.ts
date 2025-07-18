@@ -4,11 +4,11 @@ import { IUserRepository } from '@modules/users/domain/ports/repositories/user.r
 import { User } from '@modules/users/domain/entities/user.entity';
 import { UserAlreadyExistsError } from '@modules/users/domain/exceptions/user-already-exists.error';
 import { Inject } from '@nestjs/common';
-import { USER_DI_TOKENS } from '@modules/users/user.di-tokens';
+import { USER_TOKENS } from '@modules/users/user.tokens';
 @CommandHandler(CreateUserCommand)
 export class CreateUserCommandHandler implements ICommandHandler<CreateUserCommand> {
 	constructor(
-		@Inject(USER_DI_TOKENS.USER_REPOSITORY)
+		@Inject(USER_TOKENS.USER_REPOSITORY)
 		private readonly userRepository: IUserRepository,
 	) {}
 
@@ -19,7 +19,7 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
 		if (existingUser) {
 			throw new UserAlreadyExistsError(email);
 		}
-		
+
 		const user = User.create({
 			email,
 			name,

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
 import { User } from '@modules/users/domain/entities/user.entity';
 import { Model } from 'mongoose';

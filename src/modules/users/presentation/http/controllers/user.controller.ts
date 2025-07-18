@@ -40,7 +40,9 @@ export class UserController {
 		description: 'User profile retrieved successfully',
 		type: UserResponseDto,
 	})
-	async getUserProfile(@Param('userId', ObjectIdValidationPipe) userId: string) : Promise<UserResponseDto> {
+	async getUserProfile(
+		@Param('userId', ObjectIdValidationPipe) userId: string,
+	): Promise<UserResponseDto> {
 		return await this.queryBus.execute(new GetUserProfileQuery(userId));
 	}
 

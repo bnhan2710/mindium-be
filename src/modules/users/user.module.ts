@@ -4,7 +4,7 @@ import {
 	UserModel,
 	UserSchema,
 } from './infrastructure/adapters/persistence/schema/user.schema';
-import { USER_DI_TOKENS } from './user.di-tokens';
+import { USER_TOKENS } from './user.tokens';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from './presentation/http/controllers/user.controller';
 import { GetUserProfileQueryHandler } from './application/queries/handlers/get-user-profile.query-handler';
@@ -18,20 +18,23 @@ const QueryHandlers = [
 	GetFollowingQueryHandler,
 ];
 
-const CommandHandlers = [
-	CreateUserCommandHandler,
-];
+const CommandHandlers = [CreateUserCommandHandler];
 
 const Repositories = [
 	{
-		provide: USER_DI_TOKENS.USER_REPOSITORY,
+		provide: USER_TOKENS.USER_REPOSITORY,
 		useClass: MongoUserRepository,
 	},
 ];
 
 @Module({
 	imports: [MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }])],
-	providers: [...CommandHandlers,...QueryHandlers, ...Repositories, MongoUserRepository],
+	providers: [
+		...CommandHandlers,
+		...QueryHandlers,
+		...Repositories,
+		MongoUserRepository,
+	],
 	exports: [...Repositories, MongoUserRepository],
 	controllers: [UserController],
 })

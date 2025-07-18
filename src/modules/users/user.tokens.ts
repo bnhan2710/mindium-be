@@ -1,3 +1,3 @@
-export const USER_DI_TOKENS = {
+export const USER_TOKENS = {
 	USER_REPOSITORY: Symbol.for('USER_REPOSITORY'),
 };
