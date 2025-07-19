@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query, Redirect, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
 import { ExchangeTokenCommand } from '../../../application/commands/implements/exchange-token.command';
 import { LogoutCommand } from '../../../application/commands/implements/logout.command';
@@ -8,7 +8,6 @@ import { TokenPair } from '../../../domain/value-objects/token-pair.vo';
 import { ExchangeGoogleTokenDto, RefreshTokenDto, LogoutDto } from '../dtos';
 import { TokenResponseDto } from '@modules/auth/application/dtos';
 import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
-
 @ApiTags('Auth')
 @Controller({
 	path: 'auth',
@@ -36,14 +35,22 @@ export class AuthController {
 		const redirectURL = `${this.envFactory.getClientUrl()}/oauth/redirect?${params.toString()}`;
 		return { url: redirectURL };
 	}
-
 	@Post('logout')
+	@ApiOperation({ summary: 'Logout user' })
 	async logout(@Body() logoutDto: LogoutDto): Promise<void> {
 		await this.commandBus.execute(new LogoutCommand(logoutDto.refresh_token));
 	}
 
 	@Post('refresh')
-	async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenResponseDto> {
+	@ApiOperation({ summary: 'Refresh access token' })
+	@ApiResponse({
+		status: 200,
+		description: 'Access token refreshed successfully',
+		type: TokenResponseDto,
+	})
+	async refreshToken(
+		@Body() refreshTokenDto: RefreshTokenDto,
+	): Promise<TokenResponseDto> {
 		const tokenPair: TokenPair = await this.commandBus.execute(
 			new RefreshTokenCommand(refreshTokenDto.refresh_token),
 		);

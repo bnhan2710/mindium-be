@@ -2,15 +2,15 @@ import { Session } from '../entities/session.entity';
 import { TokenPair } from '../value-objects/token-pair.vo';
 import { ISessionRepository } from '../ports/repositories/session.repository';
 import { Inject, Injectable } from '@nestjs/common';
-import { AUTH_DI_TOKENS } from '@modules/auth/auth.di-tokens';
+import { AUTH_TOKENS } from '@modules/auth/auth.tokens';
 import { UserProfile } from '../ports/oauth/oauth-provider';
 import { ITokenPort } from '@modules/auth/domain/ports/token/token.port';
 @Injectable()
 export class AuthService {
 	constructor(
-		@Inject(AUTH_DI_TOKENS.SESSION_REPOSITORY)
+		@Inject(AUTH_TOKENS.SESSION_REPOSITORY)
 		private readonly sessionRepository: ISessionRepository,
-		@Inject(AUTH_DI_TOKENS.TOKEN_PORT)
+		@Inject(AUTH_TOKENS.TOKEN_PORT)
 		private readonly tokenPort: ITokenPort,
 	) {}
 

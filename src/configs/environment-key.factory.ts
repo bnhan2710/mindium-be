@@ -51,7 +51,7 @@ export class EnvironmentKeyFactory {
 			nodeEnv: this.configService.get('NODE_ENV') || 'development',
 		};
 	}
-	
+
 	getJwtConfig(): JwtModuleOptions {
 		return {
 			secret: this.getString('JWT_SECRET'),

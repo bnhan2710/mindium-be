@@ -4,7 +4,7 @@ import { RefreshTokenCommand } from '../implements/refresh-token.command';
 import { ITokenPort } from '@modules/auth/domain/ports/token/token.port';
 import { ISessionRepository } from '@modules/auth/domain/ports/repositories/session.repository';
 import { UnauthorizedException } from '@nestjs/common';
-import { AUTH_DI_TOKENS } from '@modules/auth/auth.di-tokens';
+import { AUTH_TOKENS } from '@modules/auth/auth.tokens';
 import { TokenPair } from '@modules/auth/domain/value-objects/token-pair.vo';
 import { Inject } from '@nestjs/common';
 
@@ -12,9 +12,9 @@ import { Inject } from '@nestjs/common';
 @Injectable()
 export class RefreshTokenCommandHanlder implements ICommandHandler<RefreshTokenCommand> {
 	constructor(
-		@Inject(AUTH_DI_TOKENS.TOKEN_PORT)
+		@Inject(AUTH_TOKENS.TOKEN_PORT)
 		private readonly tokenPort: ITokenPort,
-		@Inject(AUTH_DI_TOKENS.SESSION_REPOSITORY)
+		@Inject(AUTH_TOKENS.SESSION_REPOSITORY)
 		private readonly sessionRepository: ISessionRepository,
 	) {}
 
