@@ -43,9 +43,7 @@ const authProviders = [
 @Module({
 	imports: [
 		UserModule,
-		MongooseModule.forFeature([
-			{ name: SessionModel.name, schema: SessionSchema },
-		]),
+		MongooseModule.forFeature([{ name: SessionModel.name, schema: SessionSchema }]),
 		JwtModule.register({}),
 	],
 	controllers: [AuthController],

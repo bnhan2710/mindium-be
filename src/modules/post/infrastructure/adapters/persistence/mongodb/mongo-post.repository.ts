@@ -23,19 +23,33 @@ export class MongoPostRepository implements IPostRepository {
 		return postDoc ? PostMapper.toDomain(postDoc) : null;
 	}
 
-    async findByUserId(userId: string, pageRequest: IPageRequest): Promise<Post[]> {
-        const { size, offset } = pageRequest;
+	async findByUserId(userId: string, pageRequest: IPageRequest): Promise<Post[]> {
+		const { size, offset } = pageRequest;
 
-        const postsDocs = await this.postModel
-            .find({ author: new Types.ObjectId(userId) })
-            .skip(offset)
-            .limit(size)
-            .exec();
-        return postsDocs.map(PostMapper.toDomain);
-    }
+		const postsDocs = await this.postModel
+			.find({ author: new Types.ObjectId(userId) })
+			.skip(offset)
+			.limit(size)
+			.exec();
+		return postsDocs.map(PostMapper.toDomain);
+	}
 
-	async save(post: Post): Promise<void> {
-		const postDoc = PostMapper.toPersistenceCreate(post);
-		await this.postModel.create(postDoc);
+	async save(post: Post): Promise<string> {
+		const postDoc = PostMapper.toPersistence(post);
+		const createdPost = await this.postModel.create(postDoc);
+		return (createdPost._id as any).toString();
+	}
+
+	async update(post: Post): Promise<string> {
+		const postDoc = PostMapper.toPersistenceUpdate(post);
+		const postId = post.getId().getValue();
+
+		await this.postModel.updateOne({ _id: postId }, postDoc).exec();
+
+		return postId;
+	}
+
+	async delete(postId: string): Promise<void> {
+		await this.postModel.deleteOne({ _id: postId }).exec();
 	}
 }

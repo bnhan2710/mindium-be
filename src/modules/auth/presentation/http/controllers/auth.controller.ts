@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query, Redirect, Res } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
 import { ExchangeTokenCommand } from '../../../application/commands/implements/exchange-token.command';
 import { LogoutCommand } from '../../../application/commands/implements/logout.command';

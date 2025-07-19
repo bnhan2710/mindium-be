@@ -3,7 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 
 @Global()
 @Module({
-    imports: [CqrsModule.forRoot({})],
-    exports: [CqrsModule],
+	imports: [CqrsModule.forRoot({})],
+	exports: [CqrsModule],
 })
 export class CQRSModule {}

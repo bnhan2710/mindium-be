@@ -29,12 +29,10 @@ export class Post {
 		content: string,
 		tags: string[] = [],
 		author: string,
-		id?: PostId, 
+		id?: PostId,
 		createAt: Date = new Date(),
 		updatedAt: Date = new Date(),
 	): Post {
-
-
 		const slug = Slug.createFromTitle(title);
 		const tagObjects = tags.map((tag) => Tag.create(tag));
 		return new Post({
@@ -117,8 +115,25 @@ export class Post {
 		return this.props.updatedAt;
 	}
 
-	public addTag(tag: string): void {
+	public static updatePost(
+		post: Post,
+		title?: string,
+		content?: string,
+		tags?: string[],
+	): Post {
+		const updatedProps: PostProps = {
+			...post.props,
+			title: title ?? post.props.title,
+			content: content ?? post.props.content,
+			slug: Slug.createFromTitle(title ?? post.props.title),
+			tags: tags ? tags.map((tag) => Tag.create(tag)) : post.props.tags,
+			updatedAt: new Date(),
+		};
 
+		return new Post(updatedProps);
+	}
+
+	public addTag(tag: string): void {
 		const newTag = Tag.create(tag);
 		if (this.props.tags.some((t) => t.getValue() === newTag.getValue())) {
 			throw new Error('Tag already exists');

@@ -20,10 +20,7 @@ const QueryHandlers = [
 	GetFollowingQueryHandler,
 ];
 
-const CommandHandlers = [
-	CreateUserCommandHandler,
-	CreateUserIfNotExistCommandHandler
-];
+const CommandHandlers = [CreateUserCommandHandler, CreateUserIfNotExistCommandHandler];
 
 const Repositories = [
 	{
@@ -35,7 +32,8 @@ const Repositories = [
 @Module({
 	imports: [
 		CQRSModule,
-		MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }])],
+		MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }]),
+	],
 	providers: [
 		...CommandHandlers,
 		...QueryHandlers,

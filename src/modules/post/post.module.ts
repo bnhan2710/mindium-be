@@ -10,10 +10,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CreatePostCommandHandler } from './application/commands/handlers/create-post.command-handler';
 import { GetPostDetailQueryHandler } from './application/queries/handlers/get-post-detail.query-handler';
 import { GetUserPostQueryHandler } from './application/queries/handlers/get-user-post.query-handler';
+import { UpdatePostCommandHandler } from './application/commands/handlers/update-post.command-handler';
+import { DeletePostCommandHandler } from './application/commands/handlers/delete-post.command';
 
-const CommandHandlers = [CreatePostCommandHandler];
+const CommandHandlers = [
+	CreatePostCommandHandler,
+	UpdatePostCommandHandler,
+	DeletePostCommandHandler,
+];
 
-const QueryHandlers = [GetPostDetailQueryHandler,GetUserPostQueryHandler];
+const QueryHandlers = [GetPostDetailQueryHandler, GetUserPostQueryHandler];
 
 const Repositories = [
 	{
@@ -25,8 +31,8 @@ const Repositories = [
 @Module({
 	imports: [MongooseModule.forFeature([{ name: PostModel.name, schema: PostSchema }])],
 	providers: [
-		...QueryHandlers,
 		...CommandHandlers,
+		...QueryHandlers,
 		...Repositories,
 		MongoPostRepository,
 	],
