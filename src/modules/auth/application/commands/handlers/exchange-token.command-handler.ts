@@ -5,7 +5,8 @@ import { AuthService } from '@modules/auth/domain/services/authentication-domain
 import { Inject, UnauthorizedException } from '@nestjs/common';
 import { AUTH_TOKENS } from '@modules/auth/auth.tokens';
 import { TokenResponseDto } from '../../dtos';
-import { CreateUserIfNotExistCommand } from '@modules/users/application/commands/implements/create-user-if-not-exist.command'; 
+import { CreateUserIfNotExistCommand } from '@modules/user/application/commands/implements/create-user-if-not-exist.command'; 
+import { User } from '@modules/user/domain/entities/user.entity';
 @CommandHandler(ExchangeTokenCommand)
 export class ExchangeTokenCommandHandler
     implements ICommandHandler<ExchangeTokenCommand>
@@ -31,7 +32,7 @@ export class ExchangeTokenCommandHandler
             accessToken: idpToken.accessToken,
         });
 
-        const user = await this.commandBus.execute(
+        const user : User = await this.commandBus.execute(
             new CreateUserIfNotExistCommand( 
                 userProfile.email,
                 userProfile.name,

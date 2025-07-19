@@ -16,7 +16,7 @@ export type CreatePage<T, Q> = {
 	query: Q;
 };
 
-export type PageRequest = {
+export type IPageRequest = {
 	page: number;
 	size: number;
 	offset: number;
