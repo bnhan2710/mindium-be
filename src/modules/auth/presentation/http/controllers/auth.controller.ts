@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, Redirect, Res } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	Post,
+	Query,
+	Redirect,
+	Res,
+	UseGuards,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
 import { ExchangeTokenCommand } from '../../../application/commands/implements/exchange-token.command';
@@ -8,6 +17,7 @@ import { TokenPair } from '../../../domain/value-objects/token-pair.vo';
 import { ExchangeGoogleTokenDto, RefreshTokenDto, LogoutDto } from '../dtos';
 import { TokenResponseDto } from '@modules/auth/application/dtos';
 import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 @ApiTags('Auth')
 @Controller({
 	path: 'auth',
@@ -35,6 +45,8 @@ export class AuthController {
 		const redirectURL = `${this.envFactory.getClientUrl()}/oauth/redirect?${params.toString()}`;
 		return { url: redirectURL };
 	}
+
+	@UseGuards(JwtAuthGuard)
 	@Post('logout')
 	@ApiOperation({ summary: 'Logout user' })
 	async logout(@Body() logoutDto: LogoutDto): Promise<void> {
