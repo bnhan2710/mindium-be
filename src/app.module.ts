@@ -3,9 +3,10 @@ import { SharedModule } from '@shared/shared.module';
 import { ConfigsModule } from '@configs/configs.module';
 import { DatabaseModule } from 'src/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
-import { PostModule } from './modules/post/post.module';
+import { UserModule } from './modules/users/user.module';
+import { PostModule } from './modules/posts/post.module';
 import { CQRSModule } from '@shared/cqrs/cqrs.module';
+import { FollowModule } from './modules/follows/follow.module';
 @Module({
 	imports: [
 		ConfigsModule,
@@ -15,6 +16,7 @@ import { CQRSModule } from '@shared/cqrs/cqrs.module';
 		AuthModule,
 		UserModule,
 		PostModule,
+		FollowModule,
 	],
 	controllers: [],
 	providers: [],

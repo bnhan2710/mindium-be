@@ -12,7 +12,7 @@ import {
 	SessionModel,
 	SessionSchema,
 } from './infrastructure/adapters/persistence/schema/session.schema';
-import { UserModule } from '@modules/user/user.module';
+import { UserModule } from '@modules/users/user.module';
 import { AuthService } from './domain/services/authentication-domain.service';
 import { JwtModule } from '@nestjs/jwt';
 

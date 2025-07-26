@@ -20,9 +20,9 @@ export function setupSwagger(app: INestApplication): void {
 				bearerFormat: 'JWT',
 				in: 'header',
 			},
-			'access-token',
+			'access_token',
 		)
-		.addSecurityRequirements('access-token');
+		.addSecurityRequirements('access_token');
 
 	const document = SwaggerModule.createDocument(app, documentBuilder.build());
 	SwaggerModule.setup(SWAGGER_API_PATH, app, document, {
