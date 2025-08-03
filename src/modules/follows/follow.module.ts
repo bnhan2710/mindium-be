@@ -11,7 +11,7 @@ import { GetFollowersHandler } from './application/queries/handlers/get-follower
 import { GetFollowingHandler } from './application/queries/handlers/get-following.handler';
 import { GetFollowCountsHandler } from './application/queries/handlers/get-follow-counts.handler';
 import { CheckIsFollowingHandler } from './application/queries/handlers/check-is-following.handler';
-import { FollowController } from './presentation/http/follow.controller';
+import { FollowController } from './presentation/http/controllers/follow.controller';
 import { MongoFollowRepository } from './infrastructure/adapter/persistence/mongodb/mongo-follow.repository';
 import { FollowDomainService } from './domain/services/follow-domain.service';
 import { FOLLOW_TOKENS } from './follow-tokens';

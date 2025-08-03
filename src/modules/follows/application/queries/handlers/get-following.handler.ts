@@ -3,6 +3,10 @@ import { Inject } from '@nestjs/common';
 import { GetFollowingQuery } from '../implements/get-following.query';
 import { FollowRepository } from '@modules/follows/domain/repositories/follow.repository';
 import { FOLLOW_TOKENS } from '@modules/follows/follow-tokens';
+import { IPageRequest } from '@shared/common/types';
+import { PageRequest } from '@shared/common/dtos';
+
+
 
 export interface FollowingDto {
 	followeeId: string;
@@ -24,12 +28,13 @@ export class GetFollowingHandler implements IQueryHandler<GetFollowingQuery> {
 	) {}
 
 	async execute(query: GetFollowingQuery): Promise<GetFollowingResult> {
-		const { userId, limit, offset } = query;
+		const { userId, pagination } = query;
 
+	    const pageRequest = PageRequest.of(pagination);
+		
 		const result = await this.followRepository.findFollowingByUserId(
 			userId,
-			limit,
-			offset,
+			pageRequest
 		);
 
 		const following: FollowingDto[] = result.following.map((follow) => ({
@@ -40,8 +45,6 @@ export class GetFollowingHandler implements IQueryHandler<GetFollowingQuery> {
 		return {
 			following,
 			total: result.total,
-			limit,
-			offset,
 		};
 	}
 }

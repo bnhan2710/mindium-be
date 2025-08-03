@@ -3,18 +3,10 @@ import { Inject } from '@nestjs/common';
 import { GetFollowersQuery } from '../implements/get-followers.query';
 import { FollowRepository } from '@modules/follows/domain/repositories/follow.repository';
 import { FOLLOW_TOKENS } from '@modules/follows/follow-tokens';
+import { PageRequest } from '@shared/common/dtos';
+import { FollowListDto } from '../../dtos/followeer-list.dto';
 
-export interface FollowerDto {
-	followerId: string;
-	createdAt: Date;
-}
 
-export interface GetFollowersResult {
-	followers: FollowerDto[];
-	total: number;
-	limit?: number;
-	offset?: number;
-}
 
 @QueryHandler(GetFollowersQuery)
 export class GetFollowersHandler implements IQueryHandler<GetFollowersQuery> {
@@ -23,25 +15,19 @@ export class GetFollowersHandler implements IQueryHandler<GetFollowersQuery> {
 		private readonly followRepository: FollowRepository,
 	) {}
 
-	async execute(query: GetFollowersQuery): Promise<GetFollowersResult> {
-		const { userId, limit, offset } = query;
+	async execute(query: GetFollowersQuery): Promise<FollowListDto> {
+		const { userId, pagination } = query;
+		const pageRequest = PageRequest.of(pagination);
 
 		const result = await this.followRepository.findFollowersByUserId(
 			userId,
-			limit,
-			offset,
+	        pageRequest
 		);
 
-		const followers: FollowerDto[] = result.followers.map((follow) => ({
-			followerId: follow.getFollowerId().getValue(),
-			createdAt: follow.getCreatedAt(),
-		}));
+		const { followers, total } = result;
 
-		return {
-			followers,
-			total: result.total,
-			limit,
-			offset,
-		};
+		return FollowListDto.fromDomain(followers, total);
+	
 	}
 }
+ 

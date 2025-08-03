@@ -11,7 +11,7 @@ export class FollowId {
 		return new FollowId(randomUUID());
 	}
 
-	public static from(value: string): FollowId {
+	public static create(value: string): FollowId {
 		return new FollowId(value);
 	}
 

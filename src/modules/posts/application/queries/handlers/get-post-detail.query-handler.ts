@@ -6,6 +6,7 @@ import { PostNotFoundError } from '../../../domain/exceptions';
 import { POST_TOKENS } from '@modules/posts/post.tokens';
 import { Inject } from '@nestjs/common';
 import { PostResponseDto } from '../../dtos/post-response.dto';
+
 @QueryHandler(GetPostDetailQuery)
 export class GetPostDetailQueryHandler implements IQueryHandler<GetPostDetailQuery> {
 	constructor(

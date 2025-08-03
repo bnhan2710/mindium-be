@@ -1,7 +1,7 @@
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { FollowId } from '../value-objects/follow-id.vo';
 import { DomainEvent } from '@shared/domain/domain-event';
-import { UserFollowedEvent, UserUnfollowedEvent } from '../domain-events';
+import { UserFollowedEvent, UserUnfollowedEvent } from '../domain-events/follow.event';
 
 export interface FollowProps {
 	id: FollowId;

@@ -7,3 +7,4 @@ export class CheckIsFollowingQuery implements IQuery {
 		public readonly followeeId: UserId,
 	) {}
 }
+
