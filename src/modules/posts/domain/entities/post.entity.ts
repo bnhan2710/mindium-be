@@ -8,7 +8,7 @@ export interface PostProps {
 	id: PostId;
 	title: string;
 	content: string;
-	author: string;
+	authorId: string;
 	slug: Slug;
 	tags: Tag[];
 	summary: string;
@@ -18,7 +18,7 @@ export interface PostProps {
 export class Post {
 	private readonly props: PostProps;
 	constructor(props: PostProps) {
-		if (!props.id || !props.title || !props.content || !props.author) {
+		if (!props.id || !props.title || !props.content || !props.authorId) {
 			throw new Error('Post must have an id, title, content, and author');
 		}
 		this.props = props;
@@ -28,7 +28,7 @@ export class Post {
 		title: string,
 		content: string,
 		tags: string[] = [],
-		author: string,
+		authorId: string,
 		id?: PostId,
 		createAt: Date = new Date(),
 		updatedAt: Date = new Date(),
@@ -39,7 +39,7 @@ export class Post {
 			id: id || PostId.create(v4()),
 			title,
 			content,
-			author,
+			authorId,
 			slug,
 			tags: tagObjects,
 			summary: Post.generatePostSummary(content, 150),
@@ -73,7 +73,7 @@ export class Post {
 			id: this.props.id.getValue(),
 			title: this.props.title,
 			content: this.props.content,
-			author: this.props.author,
+			authorId: this.props.authorId,
 			slug: this.props.slug.getValue(),
 			tags: this.props.tags.map((tag) => tag.getValue()),
 			summary: this.props.summary,
@@ -89,8 +89,8 @@ export class Post {
 	public getContent(): string {
 		return this.props.content;
 	}
-	public getAuthor(): string {
-		return this.props.author;
+	public getAuthorId(): string {
+		return this.props.authorId;
 	}
 	public getSlug(): Slug {
 		return this.props.slug;

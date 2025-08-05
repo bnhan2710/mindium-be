@@ -11,6 +11,7 @@ import {
 	AlreadyFollowingException,
 	NotFollowingException,
 } from '../exceptions';
+import { UserFollowedEvent, UserUnfollowedEvent } from '../domain-events/follow.event';
 
 @Injectable()
 export class FollowDomainService {
@@ -25,6 +26,7 @@ export class FollowDomainService {
 		followerId: UserId,
 		followeeId: UserId,
 	): Promise<Follow> {
+
 		if (followerId.equals(followeeId)) {
 			throw new FollowSelfException();
 		}
@@ -34,6 +36,9 @@ export class FollowDomainService {
 		await this.ensureNotAlreadyFollowing(followerId, followeeId);
 
 		const follow = Follow.create(followerId, followeeId);
+		
+		follow.addDomainEvent(new UserFollowedEvent(followerId, followeeId));
+
 		await this.followRepository.save(follow);
 
 		return follow;
@@ -43,39 +48,22 @@ export class FollowDomainService {
 		followerId: UserId,
 		followeeId: UserId,
 	): Promise<void> {
-		const existingFollow = await this.followRepository.findByFollowerAndFollowee(
+
+		const existingFollow = await this.followRepository.isFollowing(
 			followerId,
 			followeeId,
 		);
 
+		console.log('Existing follow:', existingFollow);
 		if (!existingFollow) {
 			throw new NotFollowingException();
 		}
-		existingFollow.createUnfollowEvent();
 
+		new UserUnfollowedEvent(followerId, followeeId)
+		
 		await this.followRepository.deleteByFollowerAndFollowee(followerId, followeeId);
 	}
 
-	async canFollow(followerId: UserId, followeeId: UserId): Promise<boolean> {
-		if (followerId.equals(followeeId)) {
-			return false;
-		}
-
-		const [follower, followee] = await Promise.all([
-			this.userRepository.findById(followerId.getValue()),
-			this.userRepository.findById(followeeId.getValue()),
-		]);
-
-		if (!follower || !followee) {
-			return false;
-		}
-		const isAlreadyFollowing = await this.followRepository.isFollowing(
-			followerId,
-			followeeId,
-		);
-
-		return !isAlreadyFollowing;
-	}
 
 	private async ensureUsersExist(
 		followerId: UserId,

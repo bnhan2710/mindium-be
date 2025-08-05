@@ -13,13 +13,13 @@ export class CreatePostCommandHandler implements ICommandHandler<CreatePostComma
 		private readonly postRepository: IPostRepository,
 	) {}
 
-	async execute(command: CreatePostCommand): Promise<string> {
+	async execute(command: CreatePostCommand): Promise<{ id: string }> {
 		const { title, content, tags, authorId } = command;
 
 		const post = Post.create(title, content, tags, authorId);
 
 		const createdId = await this.postRepository.save(post);
-
-		return createdId;
+		
+		return { id: createdId };
 	}
 }
