@@ -24,4 +24,5 @@ export class PostModel {
 	summary?: string;
 }
 
+
 export const PostSchema = SchemaFactory.createForClass(PostModel);

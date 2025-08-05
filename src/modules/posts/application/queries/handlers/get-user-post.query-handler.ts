@@ -1,19 +1,19 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { GetUserPostQuery } from '../implements/get-user-post.query';
+import { GetUserPostsQuery } from '../implements/get-user-post.query';
 import { IPostRepository } from '@modules/posts/domain/port/repositories/post.repository';
 import { PostResponseDto } from '../../dtos/post-response.dto';
 import { POST_TOKENS } from '@modules/posts/post.tokens';
 import { PageRequest } from '@shared/common/dtos';
 
-@QueryHandler(GetUserPostQuery)
-export class GetUserPostQueryHandler implements IQueryHandler<GetUserPostQuery> {
+@QueryHandler(GetUserPostsQuery)
+export class GetUserPostsQueryHandler implements IQueryHandler<GetUserPostsQuery> {
 	constructor(
 		@Inject(POST_TOKENS.POST_REPOSITORY)
 		private readonly postRepository: IPostRepository,
 	) {}
 
-	async execute(query: GetUserPostQuery): Promise<any> {
+	async execute(query: GetUserPostsQuery): Promise<any> {
 		const { userId, pagination } = query;
 
 		const pageRequest = PageRequest.of(pagination);

@@ -6,6 +6,7 @@ export class PostResponseDto {
 	public readonly content: string;
 	public readonly tags: string[];
 	public readonly authorId: string;
+	public readonly slug: string;
 	public readonly summary?: string;
 	public readonly createdAt?: Date;
 	public readonly updatedAt?: Date;
@@ -16,6 +17,7 @@ export class PostResponseDto {
 		content: string,
 		tags: string[],
 		authorId: string,
+		slug: string,
 		sumary?: string,
 		createdAt?: Date,
 		updatedAt?: Date,
@@ -26,6 +28,7 @@ export class PostResponseDto {
 		this.tags = tags;
 		this.authorId = authorId;
 		this.summary = sumary;
+		this.slug = slug;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -37,6 +40,7 @@ export class PostResponseDto {
 			post.getContent(),
 			post.getTags().map((tag) => tag.getValue()),
 			post.getAuthorId(),
+			post.getSlug().getValue(),
 			post.getSummary(),
 			post.getCreatedAt(),
 			post.getUpdatedAt(),
