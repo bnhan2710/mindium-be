@@ -34,10 +34,10 @@ export class PostController {
 		status: 201,
 		description: 'Post created successfully',
 	})
-	async createPost(@Body() createPostDto: CreatePostRequestDto, @GetUser() user: any) {
+	async createPost(@Body() createPostDto: CreatePostRequestDto, @GetUser('sub') userId: string) {
 		const { title, content, tags } = createPostDto;
 		return await this.commandBus.execute(
-			new CreatePostCommand(title, content, tags, user.sub),
+			new CreatePostCommand(title, content, tags, userId),
 		);
 	}
 

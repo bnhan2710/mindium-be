@@ -12,7 +12,7 @@ export class PostModel {
 	content: string;
 
 	@Prop({ type: Types.ObjectId, ref: 'users', required: true })
-	author: Types.ObjectId;
+	authorId: Types.ObjectId;
 
 	@Prop({ type: [String] })
 	tags: string[];

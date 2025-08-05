@@ -76,7 +76,7 @@ export class MongoFollowRepository implements FollowRepository {
 				.limit(size)
 				.skip(offset)
 				.exec(),
-			this.followModel.countDocuments(query),
+			this.followModel.countDocuments(query).exec(),
 		]);
 		return {
 			following: FollowMapper.toDomainMany(docs),

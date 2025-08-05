@@ -8,7 +8,6 @@ import {
 } from '@modules/posts/infrastructure/adapters/persistence/schemas/post.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { OffsetPagination } from '@shared/common/dtos';
 import { IPageRequest } from '@shared/common/types';
 
 @Injectable()
@@ -27,10 +26,12 @@ export class MongoPostRepository implements IPostRepository {
 		const { size, offset } = pageRequest;
 
 		const postsDocs = await this.postModel
-			.find({ author: new Types.ObjectId(userId) })
+			.find({ authorId: new Types.ObjectId(userId) })
+			.sort({ createdAt: -1 })
 			.skip(offset)
 			.limit(size)
 			.exec();
+			
 		return postsDocs.map(PostMapper.toDomain);
 	}
 

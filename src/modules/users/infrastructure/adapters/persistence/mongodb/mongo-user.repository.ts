@@ -31,6 +31,11 @@ export class MongoUserRepository implements IUserRepository {
 		return userDoc ? UserMapper.toDomain(userDoc) : null;
 	}
 
+	async findByIds(ids: string[]): Promise<User[]> {
+		const userDocs = await this.userModel.find({ _id: { $in: ids } }).exec();
+		return userDocs.map(UserMapper.toDomain);
+	}
+
 	update(user: Partial<User>): Promise<void> {
 		throw new Error('Method not implemented.');
 	}

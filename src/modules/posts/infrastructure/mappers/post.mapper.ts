@@ -11,7 +11,7 @@ export class PostMapper {
 			postDoc.title,
 			postDoc.content,
 			postDoc.tags,
-			postDoc.author.toString(),
+			postDoc.authorId.toString(),
 			postId,
 			(postDoc as any).createdAt,
 			(postDoc as any).updatedAt,
@@ -26,7 +26,7 @@ export class PostMapper {
 			slug: post.getSlug().getValue(),
 			tags: post.getTags().map((tag) => tag.getValue()),
 			summary: post.getSummary(),
-			author: new Types.ObjectId(post.getAuthor()),
+			authorId: new Types.ObjectId(post.getAuthorId()),
 		};
 	}
 

@@ -11,8 +11,9 @@ import { GetUserProfileQueryHandler } from './application/queries/handlers/get-u
 import { CreateUserCommandHandler } from './application/commands/handlers/create-user.command.handler';
 import { CreateUserIfNotExistCommandHandler } from './application/commands/handlers/create-user-if-not-exist.command-handler';
 import { CQRSModule } from '@shared/cqrs/cqrs.module';
+import { GetUserByIdsQueryHandler } from './application/queries/handlers/get-user-by-ids.query-handler';
 
-const QueryHandlers = [GetUserProfileQueryHandler];
+const QueryHandlers = [GetUserProfileQueryHandler, GetUserByIdsQueryHandler];
 
 const CommandHandlers = [CreateUserCommandHandler, CreateUserIfNotExistCommandHandler];
 

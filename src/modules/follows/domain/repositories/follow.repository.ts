@@ -3,7 +3,6 @@ import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { FollowId } from '../value-objects/follow-id.vo';
 import { IPageRequest } from '@shared/common/types';
 
-
 export interface FollowRepository {
 	save(follow: Follow): Promise<void>;
 	delete(followId: FollowId): Promise<void>;
