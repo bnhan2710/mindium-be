@@ -1,4 +1,4 @@
-import { Body, Inject, Post } from '@nestjs/common';
+import { Body, Inject, Post, Put } from '@nestjs/common';
 import { Controller, Get, Param } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
@@ -8,6 +8,7 @@ import { ObjectIdValidationPipe } from '@shared/common/pipes/object-id-validatio
 import { UserResponseDto } from '@modules/users/application/dtos/user-response.dto';
 import { CreateUserCommand } from '@modules/users/application/commands/implements/create-user.command';
 import { CreateUserRequestDto, UpdateUserRequestDto } from '../dtos';
+import { EditProfileCommand } from '@modules/users/application/commands/implements/edit-profile.command';
 
 @ApiTags('Users')
 @Controller({
@@ -27,8 +28,8 @@ export class UserController {
 		description: 'User created successfully',
 	})
 	async createUser(@Body() createUserDto: CreateUserRequestDto) {
-		const { email, name, avatar } = createUserDto;
-		await this.commandBus.execute(new CreateUserCommand(email, name, avatar));
+		const { email, name, avatar, bio } = createUserDto;
+		await this.commandBus.execute(new CreateUserCommand(email, name, avatar, bio));
 	}
 
 	@Get(':userId')
@@ -42,5 +43,19 @@ export class UserController {
 		@Param('userId', ObjectIdValidationPipe) userId: string,
 	): Promise<UserResponseDto> {
 		return await this.queryBus.execute(new GetUserProfileQuery(userId));
+	}
+
+	@Put(':userId/')
+	@ApiOperation({ summary: 'Update user profile' })
+	@ApiResponse({
+		status: 200,
+		description: 'User profile updated successfully',
+	})
+	async updateUserProfile(
+		@Param('userId', ObjectIdValidationPipe) userId: string,
+		@Body() updateUserDto: UpdateUserRequestDto,
+	): Promise<void> {
+		const { name, avatar, bio } = updateUserDto;
+		await this.commandBus.execute(new EditProfileCommand(userId, name, avatar, bio));
 	}
 }

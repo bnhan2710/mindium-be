@@ -37,7 +37,6 @@ export class FollowController {
 		private readonly queryBus: QueryBus,
 	) {}
 
-
 	@Post(':followeeId')
 	@HttpCode(HttpStatus.CREATED)
 	@ApiOperation({ summary: 'Follow a user' })
@@ -46,7 +45,6 @@ export class FollowController {
 		@GetUser('sub') userId: string,
 		@Param('followeeId', ObjectIdValidationPipe) followeeId: string,
 	): Promise<{ message: string }> {
-
 		const command = new FollowUserCommand(
 			UserId.create(userId),
 			UserId.create(followeeId),
@@ -84,12 +82,8 @@ export class FollowController {
 		@Query('userId', ObjectIdValidationPipe) userId: string,
 		@Query() pagination: OffsetPagination,
 	) {
-
 		return await this.queryBus.execute(
-			new GetFollowersQuery(
-				UserId.create(userId),
-				pagination
-			),
+			new GetFollowersQuery(UserId.create(userId), pagination),
 		);
 	}
 
@@ -97,16 +91,12 @@ export class FollowController {
 	@ApiOperation({ summary: 'Get following list' })
 	@ApiResponse({ status: 200, description: 'Following list retrieved successfully' })
 	async getFollowing(
-		@Query('userId', ObjectIdValidationPipe) userId: string ,
+		@Query('userId', ObjectIdValidationPipe) userId: string,
 		@Query() pagination: OffsetPagination,
 	) {
 		return await this.queryBus.execute(
-			new GetFollowingQuery(
-				UserId.create(userId),
-				pagination
-			),
+			new GetFollowingQuery(UserId.create(userId), pagination),
 		);
-		
 	}
 
 	@Get('counts/:userId')

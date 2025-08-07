@@ -34,13 +34,15 @@ export class PostController {
 		status: 201,
 		description: 'Post created successfully',
 	})
-	async createPost(@Body() createPostDto: CreatePostRequestDto, @GetUser('sub') userId: string) {
+	async createPost(
+		@Body() createPostDto: CreatePostRequestDto,
+		@GetUser('sub') userId: string,
+	) {
 		const { title, content, tags } = createPostDto;
 		return await this.commandBus.execute(
 			new PublishPostCommand(title, content, tags, userId),
 		);
 	}
-
 
 	@Get('users/:userId')
 	@ApiOperation({ summary: 'Get posts by user ID' })

@@ -36,7 +36,8 @@ export class MongoUserRepository implements IUserRepository {
 		return userDocs.map(UserMapper.toDomain);
 	}
 
-	update(user: Partial<User>): Promise<void> {
-		throw new Error('Method not implemented.');
+	async update(userId: string, user: Partial<User>): Promise<void> {
+		const updateData = UserMapper.toPersistenceUpdate(user);
+		await this.userModel.updateOne({ _id: userId }, updateData).exec();
 	}
 }

@@ -4,7 +4,6 @@ import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { FollowId } from '@modules/follows/domain/value-objects/follow-id.vo';
 import { Types } from 'mongoose';
 
-
 export class FollowMapper {
 	static toPersistence(follow: Follow): Partial<FollowDocument> {
 		return {

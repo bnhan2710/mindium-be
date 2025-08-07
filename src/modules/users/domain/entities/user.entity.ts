@@ -6,6 +6,7 @@ export interface UserProps {
 	email: string;
 	name: string;
 	avatar?: string;
+	bio?: string
 }
 
 export class User {
@@ -41,20 +42,43 @@ export class User {
 		return this.props.name;
 	}
 
-	public updateProfile(name: string, avatar?: string) {
-		if (!name && !avatar) {
+	public getBio(): string | undefined {
+		return this.props.bio;
+	}
+
+	
+
+	public editProfile(name?: string, avatar?: string, bio?: string) {
+		if (!name && !avatar && !bio) {
 			throw new InvalidUserDataError(
-				'At least one field (name or avatar) must be provided for update',
+				'At least one of name, avatar, or bio must be provided for update'
 			);
 		}
 
-		if (name.trim().length < 2) {
-			throw new InvalidUserDataError('Name must be at least 2 characters long');
+		if (name) {
+			this.props.name = name;
 		}
 
-		this.props.name = name;
 		if (avatar) {
 			this.props.avatar = avatar;
 		}
+
+		if (bio) {
+			this.props.bio = bio;
+		}
+		
+		if( this.props.name && this.props.name.length > 50) {
+			throw new InvalidUserDataError('Name must not exceed 50 characters');
+		}
+
+		if( this.props.avatar && this.props.avatar.length > 200) {
+			throw new InvalidUserDataError('Avatar URL must not exceed 200 characters');
+		}
+
+		if( this.props.bio && this.props.bio.length > 160) {
+			throw new InvalidUserDataError('Bio must not exceed 160 characters');
+		}
+
+
 	}
 }

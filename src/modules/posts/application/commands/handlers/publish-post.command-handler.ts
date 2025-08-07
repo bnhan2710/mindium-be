@@ -19,7 +19,7 @@ export class PublishPostHandler implements ICommandHandler<PublishPostCommand> {
 		const post = Post.create(title, content, tags, authorId);
 
 		const createdId = await this.postRepository.save(post);
-		
+
 		return { id: createdId };
 	}
 }

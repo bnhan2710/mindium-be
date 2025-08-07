@@ -31,7 +31,7 @@ export class MongoPostRepository implements IPostRepository {
 			.skip(offset)
 			.limit(size)
 			.exec();
-			
+
 		return postsDocs.map(PostMapper.toDomain);
 	}
 

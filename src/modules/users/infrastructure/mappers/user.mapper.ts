@@ -10,6 +10,7 @@ export class UserMapper {
 				email: userDoc.email,
 				name: userDoc.name,
 				avatar: userDoc.avatar,
+				bio: userDoc.bio,
 			},
 			userId,
 		);
@@ -21,6 +22,7 @@ export class UserMapper {
 			email: user.getEmail(),
 			name: user.getName(),
 			avatar: user.getAvatarUrl(),
+			bio: user.getBio(),
 		};
 	}
 
@@ -29,13 +31,25 @@ export class UserMapper {
 			email: user.getEmail(),
 			name: user.getName(),
 			avatar: user.getAvatarUrl(),
+			bio: user.getBio(),
 		};
 	}
 
-	static toPersistenceUpdate(user: User): Partial<UserDocument> {
-		return {
-			name: user.getName(),
-			avatar: user.getAvatarUrl(),
-		};
+	static toPersistenceUpdate(user:Partial<User>): Partial<UserDocument> {
+		const result: Partial<UserDocument> = {};
+		
+		if (user.getName) {
+			result.name = user.getName();
+		}
+		
+		if (user.getAvatarUrl) {
+			result.avatar = user.getAvatarUrl();
+		}
+		
+		if (user.getBio) {
+			result.bio = user.getBio();
+		}
+		
+		return result;
 	}
 }

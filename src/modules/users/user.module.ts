@@ -5,17 +5,20 @@ import {
 	UserSchema,
 } from './infrastructure/adapters/persistence/schema/user.schema';
 import { USER_TOKENS } from './user.tokens';
+import { CQRSModule } from '@shared/cqrs/cqrs.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from './presentation/http/controllers/user.controller';
 import { GetUserProfileQueryHandler } from './application/queries/handlers/get-user-profile.query-handler';
 import { CreateUserCommandHandler } from './application/commands/handlers/create-user.command.handler';
 import { CreateUserIfNotExistCommandHandler } from './application/commands/handlers/create-user-if-not-exist.command-handler';
-import { CQRSModule } from '@shared/cqrs/cqrs.module';
 import { GetUserByIdsQueryHandler } from './application/queries/handlers/get-user-by-ids.query-handler';
+import { EditProfileCommandHandler } from './application/commands/handlers/edit-profile.command-handler';
+
+
 
 const QueryHandlers = [GetUserProfileQueryHandler, GetUserByIdsQueryHandler];
 
-const CommandHandlers = [CreateUserCommandHandler, CreateUserIfNotExistCommandHandler];
+const CommandHandlers = [CreateUserCommandHandler, CreateUserIfNotExistCommandHandler, EditProfileCommandHandler];
 
 const Repositories = [
 	{

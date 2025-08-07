@@ -26,4 +26,13 @@ export class CreateUserRequestDto {
 	@IsOptional()
 	@IsString({ message: 'Avatar must be a valid URL string' })
 	avatar?: string;
+
+	@ApiProperty({
+		description: 'User biography',
+		example: 'Software developer and tech enthusiast',
+		required: false,
+	})
+	@IsOptional()
+	@IsString({ message: 'Bio must be a string' })
+	bio?: string;
 }

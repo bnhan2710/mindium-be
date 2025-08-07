@@ -19,7 +19,7 @@ const CommandHandlers = [
 	DeletePostCommandHandler,
 ];
 
-const QueryHandlers = [ GetPostDetailsQueryHandler, GetUserPostsQueryHandler];
+const QueryHandlers = [GetPostDetailsQueryHandler, GetUserPostsQueryHandler];
 
 const Repositories = [
 	{
