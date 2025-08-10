@@ -11,8 +11,6 @@ import {
 	AlreadyFollowingException,
 	NotFollowingException,
 } from '../exceptions';
-import { UserFollowedEvent, UserUnfollowedEvent } from '../domain-events/follow.event';
-
 @Injectable()
 export class FollowDomainService {
 	constructor(
@@ -36,9 +34,9 @@ export class FollowDomainService {
 
 		const follow = Follow.create(followerId, followeeId);
 
-		follow.addDomainEvent(new UserFollowedEvent(followerId, followeeId));
-
 		await this.followRepository.save(follow);
+		
+		follow.createFollowEvent();
 
 		return follow;
 	}
@@ -57,9 +55,8 @@ export class FollowDomainService {
 		}
 
 		const follow = Follow.create(followerId, followeeId);
-		follow.addDomainEvent(new UserUnfollowedEvent(followerId, followeeId));
-
 		await this.followRepository.deleteByFollowerAndFollowee(followerId, followeeId);
+		follow.createUnfollowEvent();
 	}
 
 	private async ensureUsersExist(

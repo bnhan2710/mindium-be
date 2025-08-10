@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@shared/domain/aggregate-root';
 import { SlugGenerator } from '@shared/services';
 import { Slug } from '../value-objects/slug';
 import { PostId } from '../value-objects/post-id';
@@ -15,9 +16,10 @@ export interface PostProps {
 	createdAt?: Date;
 	updatedAt?: Date;
 }
-export class Post {
+export class Post extends AggregateRoot {
 	private readonly props: PostProps;
 	constructor(props: PostProps) {
+		super(props.id.getValue());
 		if (!props.id || !props.title || !props.content || !props.authorId) {
 			throw new Error('Post must have an id, title, content, and author');
 		}
@@ -49,18 +51,15 @@ export class Post {
 	}
 
 	static generatePostSummary(markdownContent, maxLength = 150) {
-		// Remove code blocks and HTML tags from the markdown content
+
 		const codeRegex = /<code[^>]*>.*?<\/code>/gs;
 		const withoutCode = markdownContent.replace(codeRegex, '');
 
-		// Remove HTML tags
 		const htmlRegex = /<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g;
 		let summary = withoutCode.replace(htmlRegex, '');
 
-		// Remove markdown syntax
 		summary = summary.replace(/\s+/g, ' ').trim();
 
-		// Truncate the summary to the specified length
 		if (summary.length > maxLength) {
 			summary = summary.substring(0, maxLength) + '...';
 		}
@@ -80,9 +79,6 @@ export class Post {
 		};
 	}
 
-	public getId(): PostId {
-		return this.props.id;
-	}
 	public getTitle(): string {
 		return this.props.title;
 	}
@@ -105,14 +101,6 @@ export class Post {
 
 	public generateSlug(title): string {
 		return SlugGenerator.generate(title);
-	}
-
-	public getCreatedAt(): Date | undefined {
-		return this.props.createdAt;
-	}
-
-	public getUpdatedAt(): Date | undefined {
-		return this.props.updatedAt;
 	}
 
 	public static updatePost(

@@ -35,7 +35,7 @@ export class PostResponseDto {
 
 	static fromDomain(post: Post): PostResponseDto {
 		return new PostResponseDto(
-			post.getId().getValue(),
+			post.getId(),
 			post.getTitle(),
 			post.getContent(),
 			post.getTags().map((tag) => tag.getValue()),

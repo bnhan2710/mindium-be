@@ -29,5 +29,5 @@ export class UpdateUserRequestDto {
 	})
 	@IsOptional()
 	@IsString({ message: 'Bio must be a string' })
-	bio?: string;	
+	bio?: string;
 }

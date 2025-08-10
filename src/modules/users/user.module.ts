@@ -14,11 +14,13 @@ import { CreateUserIfNotExistCommandHandler } from './application/commands/handl
 import { GetUserByIdsQueryHandler } from './application/queries/handlers/get-user-by-ids.query-handler';
 import { EditProfileCommandHandler } from './application/commands/handlers/edit-profile.command-handler';
 
-
-
 const QueryHandlers = [GetUserProfileQueryHandler, GetUserByIdsQueryHandler];
 
-const CommandHandlers = [CreateUserCommandHandler, CreateUserIfNotExistCommandHandler, EditProfileCommandHandler];
+const CommandHandlers = [
+	CreateUserCommandHandler,
+	CreateUserIfNotExistCommandHandler,
+	EditProfileCommandHandler,
+];
 
 const Repositories = [
 	{

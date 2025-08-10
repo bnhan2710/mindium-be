@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import { USER_TOKENS } from '@modules/users/user.tokens';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
 import { User } from '@modules/users/domain/entities/user.entity';
-
+import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 @CommandHandler(CreateUserIfNotExistCommand)
 export class CreateUserIfNotExistCommandHandler
 	implements ICommandHandler<CreateUserIfNotExistCommand>
@@ -21,13 +21,23 @@ export class CreateUserIfNotExistCommandHandler
 		if (existingUser) {
 			return existingUser;
 		}
-		const user = User.create({
+
+		const userCreate = User.create({
 			email,
 			name,
 			avatar,
 		});
-		await this.userRepository.save(user);
+		
+		const createdId = await this.userRepository.save(userCreate);
 
-		return user;
+		const userCreated = User.create({
+			email,
+			name,
+			avatar,
+		},
+			UserId.create(createdId) 
+		);
+		
+		return userCreated;
 	}
 }

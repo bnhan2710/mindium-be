@@ -43,7 +43,7 @@ export class MongoPostRepository implements IPostRepository {
 
 	async update(post: Post): Promise<string> {
 		const postDoc = PostMapper.toPersistenceUpdate(post);
-		const postId = post.getId().getValue();
+		const postId = post.getId();
 
 		await this.postModel.updateOne({ _id: postId }, postDoc).exec();
 

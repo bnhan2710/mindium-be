@@ -8,22 +8,21 @@ import { USER_TOKENS } from '@modules/users/user.tokens';
 
 @CommandHandler(EditProfileCommand)
 export class EditProfileCommandHandler implements ICommandHandler<EditProfileCommand> {
-    constructor(
-        @Inject(USER_TOKENS.REPOSITORY)
-        private readonly userRepository: IUserRepository,
-    ) {}
-    async execute(command: EditProfileCommand): Promise<void> {
-        const { userId, name, avatar, bio } = command;
-        
-        const user = await this.userRepository.findById(userId);
-        
-        if (!user) {
-            throw new UserNotFoundError(userId);
-        }
+	constructor(
+		@Inject(USER_TOKENS.REPOSITORY)
+		private readonly userRepository: IUserRepository,
+	) {}
+	async execute(command: EditProfileCommand): Promise<void> {
+		const { userId, name, avatar, bio } = command;
 
-        user.editProfile(name, avatar, bio);
+		const user = await this.userRepository.findById(userId);
 
-        await this.userRepository.update(userId, user);
-    }
+		if (!user) {
+			throw new UserNotFoundError(userId);
+		}
 
+		user.editProfile(name, avatar, bio);
+
+		await this.userRepository.update(userId, user);
+	}
 }
