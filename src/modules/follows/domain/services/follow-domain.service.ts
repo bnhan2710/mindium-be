@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { Follow } from '../entities/follow.entity';
-import { FollowRepository } from '../repositories/follow.repository';
+import { IFollowRepository } from '../repositories/follow.repository';
 import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
 import { FOLLOW_TOKENS } from '@modules/follows/follow-tokens';
 import { USER_TOKENS } from '@modules/users/user.tokens';
@@ -11,13 +11,11 @@ import {
 	AlreadyFollowingException,
 	NotFollowingException,
 } from '../exceptions';
-import { UserFollowedEvent, UserUnfollowedEvent } from '../domain-events/follow.event';
-
 @Injectable()
 export class FollowDomainService {
 	constructor(
 		@Inject(FOLLOW_TOKENS.REPOSITORY)
-		private readonly followRepository: FollowRepository,
+		private readonly followRepository: IFollowRepository,
 		@Inject(USER_TOKENS.REPOSITORY)
 		private readonly userRepository: IUserRepository,
 	) {}
@@ -26,7 +24,6 @@ export class FollowDomainService {
 		followerId: UserId,
 		followeeId: UserId,
 	): Promise<Follow> {
-
 		if (followerId.equals(followeeId)) {
 			throw new FollowSelfException();
 		}
@@ -36,10 +33,10 @@ export class FollowDomainService {
 		await this.ensureNotAlreadyFollowing(followerId, followeeId);
 
 		const follow = Follow.create(followerId, followeeId);
-		
-		follow.addDomainEvent(new UserFollowedEvent(followerId, followeeId));
 
 		await this.followRepository.save(follow);
+		
+		follow.createFollowEvent();
 
 		return follow;
 	}
@@ -48,22 +45,19 @@ export class FollowDomainService {
 		followerId: UserId,
 		followeeId: UserId,
 	): Promise<void> {
-
 		const existingFollow = await this.followRepository.isFollowing(
 			followerId,
 			followeeId,
 		);
 
-		console.log('Existing follow:', existingFollow);
 		if (!existingFollow) {
 			throw new NotFollowingException();
 		}
 
-		new UserUnfollowedEvent(followerId, followeeId)
-		
+		const follow = Follow.create(followerId, followeeId);
 		await this.followRepository.deleteByFollowerAndFollowee(followerId, followeeId);
+		follow.createUnfollowEvent();
 	}
-
 
 	private async ensureUsersExist(
 		followerId: UserId,

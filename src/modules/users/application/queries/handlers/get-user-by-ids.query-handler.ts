@@ -7,19 +7,19 @@ import { UserResponseDto } from '../../dtos/user-response.dto';
 
 @QueryHandler(GetUserByIdsQuery)
 export class GetUserByIdsQueryHandler implements IQueryHandler<GetUserByIdsQuery> {
-    constructor(
-        @Inject(USER_TOKENS.REPOSITORY)
-        private readonly userRepository: IUserRepository,
-    ) {}
+	constructor(
+		@Inject(USER_TOKENS.REPOSITORY)
+		private readonly userRepository: IUserRepository,
+	) {}
 
-    async execute(query: GetUserByIdsQuery): Promise<UserResponseDto[]> {
-        const { userIds } = query;
-        const users = await this.userRepository.findByIds(userIds);
+	async execute(query: GetUserByIdsQuery): Promise<UserResponseDto[]> {
+		const { userIds } = query;
+		const users = await this.userRepository.findByIds(userIds);
 
-        if (!users || users.length === 0) {
-            return []; 
-        }
+		if (!users || users.length === 0) {
+			return [];
+		}
 
-        return UserResponseDto.fromDomainList(users);
-    }
+		return UserResponseDto.fromDomainList(users);
+	}
 }

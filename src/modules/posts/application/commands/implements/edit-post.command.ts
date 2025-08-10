@@ -1,6 +1,6 @@
 import { ICommand } from '@nestjs/cqrs';
 
-export class UpdatePostCommand implements ICommand {
+export class EditPostCommand implements ICommand {
 	constructor(
 		public readonly postId: string,
 		public readonly title?: string,

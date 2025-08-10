@@ -1,4 +1,4 @@
-import { DomainError } from '@shared/common/errors/domain.error';
+import { DomainError } from '@shared/domain/domain.error';
 export class InvalidPostDataError extends DomainError {
 	constructor(message: string) {
 		super(`Invalid post data: ${message}`);

@@ -16,9 +16,10 @@ export class MongoUserRepository implements IUserRepository {
 		private readonly userModel: Model<UserDocument>,
 	) {}
 
-	async save(user: User): Promise<void> {
-		const userDoc = UserMapper.toPersistenceCreate(user);
-		await this.userModel.create(userDoc);
+	async save(user: User): Promise<string> {
+		const userDoc = UserMapper.toPersistence(user);
+		const created = await this.userModel.create(userDoc);
+		return (created._id as any).toString();
 	}
 
 	async findByEmail(email: string): Promise<User | null> {
@@ -36,7 +37,8 @@ export class MongoUserRepository implements IUserRepository {
 		return userDocs.map(UserMapper.toDomain);
 	}
 
-	update(user: Partial<User>): Promise<void> {
-		throw new Error('Method not implemented.');
+	async update(userId: string, user: Partial<User>): Promise<void> {
+		const updateData = UserMapper.toPersistenceUpdate(user);
+		await this.userModel.updateOne({ _id: userId }, updateData).exec();
 	}
 }

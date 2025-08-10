@@ -3,14 +3,14 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreatePostCommand } from '../../../application/commands/implements/create-post.command';
+import { PublishPostCommand } from '../../../application/commands/implements/publish-post.command';
 import { OffsetPagination } from '@shared/common/dtos';
 import { PostResponseDto } from '@modules/posts/application/dtos/post-response.dto';
 import { ObjectIdValidationPipe } from '@shared/common/pipes/object-id-validation.pipe';
 import { CreatePostRequestDto } from '../dtos/create-post.request';
-import { GetPostDetailQuery } from '@modules/posts/application/queries/implements/get-post-detail.query';
-import { GetUserPostQuery } from '@modules/posts/application/queries/implements/get-user-post.query';
-import { UpdatePostCommand } from '@modules/posts/application/commands/implements/update-post.command';
+import { GetPostDetailsQuery } from '@modules/posts/application/queries/implements/get-post-detail.query';
+import { GetUserPostsQuery } from '@modules/posts/application/queries/implements/get-user-post.query';
+import { EditPostCommand } from '@modules/posts/application/commands/implements/edit-post.command';
 import { UpdatePostRequestDto } from '../dtos/update-post.request';
 import { DeletePostCommand } from '@modules/posts/application/commands/implements/delete-post.command';
 import { UseGuards } from '@nestjs/common';
@@ -34,26 +34,14 @@ export class PostController {
 		status: 201,
 		description: 'Post created successfully',
 	})
-	async createPost(@Body() createPostDto: CreatePostRequestDto, @GetUser('sub') userId: string) {
+	async createPost(
+		@Body() createPostDto: CreatePostRequestDto,
+		@GetUser('sub') userId: string,
+	) {
 		const { title, content, tags } = createPostDto;
 		return await this.commandBus.execute(
-			new CreatePostCommand(title, content, tags, userId),
+			new PublishPostCommand(title, content, tags, userId),
 		);
-	}
-
-	@Get(':postId')
-	@ApiOperation({ summary: 'Get post detail by ID' })
-	@ApiResponse({
-		status: 200,
-		description: 'Post detail retrieved successfully',
-		type: PostResponseDto,
-	})
-	@ApiResponse({
-		status: 404,
-		description: 'Post not found',
-	})
-	async getPostDetail(@Param('postId', ObjectIdValidationPipe) postId: string) {
-		return this.queryBus.execute(new GetPostDetailQuery(postId));
 	}
 
 	@Get('users/:userId')
@@ -83,7 +71,23 @@ export class PostController {
 		@Param('userId', ObjectIdValidationPipe) userId: string,
 		@Query() pagination: OffsetPagination,
 	) {
-		return this.queryBus.execute(new GetUserPostQuery(userId, pagination));
+		return this.queryBus.execute(new GetUserPostsQuery(userId, pagination));
+	}
+
+	@Get(':postId/:slug')
+	@ApiOperation({ summary: 'Get post detail by ID' })
+	@ApiResponse({
+		status: 200,
+		description: 'Post detail retrieved successfully',
+		type: PostResponseDto,
+	})
+	@ApiResponse({
+		status: 404,
+		description: 'Post not found',
+	})
+	async getPostDetail(@Param('postId', ObjectIdValidationPipe) postId: string) {
+		const query = new GetPostDetailsQuery(postId);
+		return this.queryBus.execute(query);
 	}
 
 	@Put(':postId')
@@ -102,7 +106,7 @@ export class PostController {
 	) {
 		const { title, content, tags } = updatePostDto;
 		return await this.commandBus.execute(
-			new UpdatePostCommand(postId, title, content, tags),
+			new EditPostCommand(postId, title, content, tags),
 		);
 	}
 

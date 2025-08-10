@@ -10,6 +10,7 @@ export class UserMapper {
 				email: userDoc.email,
 				name: userDoc.name,
 				avatar: userDoc.avatar,
+				bio: userDoc.bio,
 			},
 			userId,
 		);
@@ -17,25 +18,42 @@ export class UserMapper {
 
 	static toPersistence(user: User): Partial<UserDocument> {
 		return {
-			_id: new Types.ObjectId(user.getId().getValue()),
+			_id: new Types.ObjectId(user.getId()),
 			email: user.getEmail(),
 			name: user.getName(),
 			avatar: user.getAvatarUrl(),
+			bio: user.getBio(),
 		};
 	}
 
-	static toPersistenceCreate(user: User): Partial<UserDocument> {
-		return {
-			email: user.getEmail(),
-			name: user.getName(),
-			avatar: user.getAvatarUrl(),
-		};
+	static toPersistenceUpdate(user: Partial<User>): Partial<UserDocument> {
+		const result: Partial<UserDocument> = {};
+
+		if (user.getName) {
+			result.name = user.getName();
+		}
+
+		if (user.getAvatarUrl) {
+			result.avatar = user.getAvatarUrl();
+		}
+
+		if (user.getBio) {
+			result.bio = user.getBio();
+		}
+
+		return result;
 	}
 
-	static toPersistenceUpdate(user: User): Partial<UserDocument> {
-		return {
-			name: user.getName(),
-			avatar: user.getAvatarUrl(),
-		};
+	static reconstitute(userDoc: UserDocument): User {
+		const userId = UserId.create((userDoc._id as any).toString());
+		return User.create(
+			{
+				email: userDoc.email,
+				name: userDoc.name,
+				avatar: userDoc.avatar,
+				bio: userDoc.bio,
+			},
+			userId,
+		);
 	}
 }

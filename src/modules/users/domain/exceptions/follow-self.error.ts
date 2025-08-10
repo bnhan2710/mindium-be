@@ -1,4 +1,4 @@
-import { DomainError } from '@shared/common/errors/domain.error';
+import { DomainError } from '@shared/domain/domain.error';
 
 export class CannotFollowSelfError extends DomainError {
 	constructor() {

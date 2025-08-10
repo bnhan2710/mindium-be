@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetFollowCountsQuery } from '../implements/get-follow-counts.query';
-import { FollowRepository } from '@modules/follows/domain/repositories/follow.repository';
+import { IFollowRepository } from '@modules/follows/domain/repositories/follow.repository';
 import { FOLLOW_TOKENS } from '@modules/follows/follow-tokens';
 
 export interface GetFollowCountsResult {
@@ -13,7 +13,7 @@ export interface GetFollowCountsResult {
 export class GetFollowCountsHandler implements IQueryHandler<GetFollowCountsQuery> {
 	constructor(
 		@Inject(FOLLOW_TOKENS.REPOSITORY)
-		private readonly followRepository: FollowRepository,
+		private readonly followRepository: IFollowRepository,
 	) {}
 
 	async execute(query: GetFollowCountsQuery): Promise<GetFollowCountsResult> {

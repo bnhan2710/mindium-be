@@ -1,10 +1,15 @@
 import { randomUUID } from 'crypto';
+import { ValueObject } from '@shared/domain/value-object';
+export class FollowId extends ValueObject<string> {
+	
+		private constructor(value: string) {
+			super(value);
+		}
 
-export class FollowId {
-	private readonly value: string;
-
-	private constructor(value: string) {
-		this.value = value;
+	protected validate(value: string): void {
+		if (!value || typeof value !== 'string') {
+			throw new Error('FollowId must be a non-empty string');
+		}
 	}
 
 	public static generate(): FollowId {
@@ -15,15 +20,4 @@ export class FollowId {
 		return new FollowId(value);
 	}
 
-	public getValue(): string {
-		return this.value;
-	}
-
-	public equals(other: FollowId): boolean {
-		return this.value === other.value;
-	}
-
-	public toString(): string {
-		return this.value;
-	}
 }

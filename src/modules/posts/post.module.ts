@@ -7,19 +7,19 @@ import {
 	PostModel,
 } from './infrastructure/adapters/persistence/schemas/post.schema';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CreatePostCommandHandler } from './application/commands/handlers/create-post.command-handler';
-import { GetPostDetailQueryHandler } from './application/queries/handlers/get-post-detail.query-handler';
-import { GetUserPostQueryHandler } from './application/queries/handlers/get-user-post.query-handler';
-import { UpdatePostCommandHandler } from './application/commands/handlers/update-post.command-handler';
+import { PublishPostHandler } from './application/commands/handlers/publish-post.command-handler';
+import { GetPostDetailsQueryHandler } from './application/queries/handlers/get-post-detail.query-handler';
+import { GetUserPostsQueryHandler } from './application/queries/handlers/get-user-post.query-handler';
+import { EditPostCommandHanler } from './application/commands/handlers/edit-post.command-handler';
 import { DeletePostCommandHandler } from './application/commands/handlers/delete-post.command';
 
 const CommandHandlers = [
-	CreatePostCommandHandler,
-	UpdatePostCommandHandler,
+	PublishPostHandler,
+	EditPostCommandHanler,
 	DeletePostCommandHandler,
 ];
 
-const QueryHandlers = [GetPostDetailQueryHandler, GetUserPostQueryHandler];
+const QueryHandlers = [GetPostDetailsQueryHandler, GetUserPostsQueryHandler];
 
 const Repositories = [
 	{

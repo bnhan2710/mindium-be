@@ -1,8 +1,7 @@
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { FollowId } from '../value-objects/follow-id.vo';
-import { DomainEvent } from '@shared/domain/domain-event';
-import { UserFollowedEvent, UserUnfollowedEvent } from '../domain-events/follow.event';
-
+import { UserFollowedEvent, UserUnfollowedEvent } from '../events/follow.event';
+import { AggregateRoot } from '@shared/domain/aggregate-root';
 export interface FollowProps {
 	id: FollowId;
 	followerId: UserId;
@@ -10,11 +9,11 @@ export interface FollowProps {
 	createdAt: Date;
 }
 
-export class Follow {
+export class Follow extends AggregateRoot{
 	private readonly props: FollowProps;
-	private _domainEvents: DomainEvent[] = [];
 
 	private constructor(props: FollowProps) {
+		super(props.id.getValue());
 		this.validateProps(props);
 		this.props = props;
 	}
@@ -52,16 +51,11 @@ export class Follow {
 		}
 	}
 
-	public addDomainEvent(event: DomainEvent): void {
-		this._domainEvents.push(event);
-	}
 
-	public getDomainEvents(): DomainEvent[] {
-		return [...this._domainEvents];
-	}
-
-	public clearDomainEvents(): void {
-		this._domainEvents = [];
+	public createFollowEvent(): void {
+		this.addDomainEvent(
+			new UserFollowedEvent(this.props.followerId, this.props.followeeId),
+		);
 	}
 
 	public createUnfollowEvent(): void {
@@ -69,10 +63,7 @@ export class Follow {
 			new UserUnfollowedEvent(this.props.followerId, this.props.followeeId),
 		);
 	}
-
-	public getId(): FollowId {
-		return this.props.id;
-	}
+	
 
 	public getFollowerId(): UserId {
 		return this.props.followerId;
@@ -86,7 +77,4 @@ export class Follow {
 		return this.props.createdAt;
 	}
 
-	public equals(other: Follow): boolean {
-		return this.props.id.equals(other.getId());
-	}
 }

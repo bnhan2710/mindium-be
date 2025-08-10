@@ -41,7 +41,7 @@ export class ExchangeTokenCommandHandler
 		);
 
 		const tokenPair = await this.authService.createSessionAndTokens({
-			id: user.getId().getValue(),
+			id: user.getId(),
 			email: user.getEmail(),
 			name: user.getName(),
 			picture: user.getAvatarUrl(),

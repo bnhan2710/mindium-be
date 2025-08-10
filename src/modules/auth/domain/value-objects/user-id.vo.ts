@@ -1,15 +1,14 @@
-export class UserId {
+import { ValueObject } from '@shared/domain/value-object';
+
+export class UserId extends ValueObject<string> {
 	constructor(private readonly value: string) {
-		this.validate(value);
+		super(value);
 	}
 
-	private validate(value: string): void {
+	protected validate(value: string): void {
 		if (!value || value.trim().length === 0) {
 			throw new Error('UserId cannot be empty');
 		}
 	}
 
-	public getValue(): string {
-		return this.value;
-	}
 }
