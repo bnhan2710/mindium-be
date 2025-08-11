@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
+import { EnvironmentKeyFactory } from 'src/libs/environment-key.factory';
 import { IOAuthProvider } from '@modules/auth/domain/ports/oauth/oauth-provider';
 import axios from 'axios';
 import * as qs from 'qs';

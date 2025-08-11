@@ -2,11 +2,11 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
-import { setupSwagger } from 'src/configs/swagger';
+import { setupSwagger } from 'src/libs/swagger';
 import { GlobalExceptionFilter } from '@shared/common/exceptions/exception.filter';
 import * as morgan from 'morgan';
 import { TransformInterceptor } from '@shared/common/interceptors/transform.interceptor';
-import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
+import { EnvironmentKeyFactory } from 'src/libs/environment-key.factory';
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);

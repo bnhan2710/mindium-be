@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
+import { EnvironmentKeyFactory } from 'src/libs/environment-key.factory';
 
 @Module({
 	imports: [
@@ -14,4 +14,4 @@ import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
 	],
 	exports: [MongooseModule],
 })
-export class DatabaseModule {}
+export class MongoDbModule {}

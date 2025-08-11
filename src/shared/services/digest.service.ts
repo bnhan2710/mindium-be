@@ -1,6 +1,6 @@
 import { compare, genSalt, hash } from 'bcryptjs';
 import { Injectable } from '@nestjs/common';
-import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
+import { EnvironmentKeyFactory } from 'src/libs/environment-key.factory';
 
 @Injectable()
 export class DigestService {

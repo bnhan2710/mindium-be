@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModuleOptions } from '@nestjs/jwt';
 import { isBooleanString } from 'class-validator';
+import { RabbitMQConfig } from './rabitmq.config';
 
 @Injectable()
 export class EnvironmentKeyFactory {
@@ -49,6 +50,16 @@ export class EnvironmentKeyFactory {
 			corsOrigin: this.configService.get('CORS_ORIGIN') || '*',
 			apiVersion: this.configService.get('API_VERSION') || 'v1',
 			nodeEnv: this.configService.get('NODE_ENV') || 'development',
+		};
+	}
+
+	getRabbitMQConfig() : RabbitMQConfig{
+		return {
+			url: this.getString('RABBITMQ_URL'),
+			queue: this.getString('RABBITMQ_QUEUE') || 'blog-system-queue',
+			exchange: this.getString('RABBITMQ_EXCHANGE') || 'blog-system-exchange',
+			routingKey: this.getString('RABBITMQ_ROUTING_KEY') || 'blog.events',
+			prefetch: this.getNumber('RABBITMQ_PREFETCH') || 10,
 		};
 	}
 

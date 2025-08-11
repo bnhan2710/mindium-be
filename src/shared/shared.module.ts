@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { DigestService } from './services';
 import { JwtModule } from '@nestjs/jwt';
-import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
+import { EnvironmentKeyFactory } from 'src/libs/environment-key.factory';
 @Global()
 @Module({
 	imports: [

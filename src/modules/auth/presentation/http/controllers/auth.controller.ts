@@ -16,7 +16,7 @@ import { RefreshTokenCommand } from '../../../application/commands/implements/re
 // import { TokenPair } from '../../../domain/value-objects/token-pair.vo';
 import { ExchangeGoogleTokenDto, RefreshTokenDto, LogoutDto } from '../dtos';
 import { TokenResponseDto } from '@modules/auth/application/dtos';
-import { EnvironmentKeyFactory } from '@configs/environment-key.factory';
+import { EnvironmentKeyFactory } from 'src/libs/environment-key.factory';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 @ApiTags('Auth')
 @Controller({
