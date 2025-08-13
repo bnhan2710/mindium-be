@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { Follow } from '../entities/follow.entity';
 import { IFollowRepository } from '../repositories/follow.repository';
-import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
+import { IUserRepository } from '@modules/users/domain/repositories/user.repository';
 import { FOLLOW_TOKENS } from '@modules/follows/follow-tokens';
 import { USER_TOKENS } from '@modules/users/user.tokens';
 import {
@@ -35,7 +35,7 @@ export class FollowDomainService {
 		const follow = Follow.create(followerId, followeeId);
 
 		await this.followRepository.save(follow);
-		
+
 		follow.createFollowEvent();
 
 		return follow;

@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { PostController } from './presentation/http/controllers/post.controller';
 import { POST_TOKENS } from './post.tokens';
-import { MongoPostRepository } from './infrastructure/adapters/persistence/mongodb/mongo-post.repository';
+import { MongoPostRepository } from './infrastructure/persistence/mongodb/mongo-post.repository';
 import {
 	PostSchema,
 	PostModel,
-} from './infrastructure/adapters/persistence/schemas/post.schema';
+} from './infrastructure/persistence/schemas/post.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PublishPostHandler } from './application/commands/handlers/publish-post.command-handler';
 import { GetPostDetailsQueryHandler } from './application/queries/handlers/get-post-detail.query-handler';

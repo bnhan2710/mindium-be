@@ -1,5 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
+import { IUserRepository } from '@modules/users/domain/repositories/user.repository';
 import { Inject } from '@nestjs/common';
 import { USER_TOKENS } from '@modules/users/user.tokens';
 import { GetUserByIdsQuery } from '../implements/get-user-by-ids.query';

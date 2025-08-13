@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ICommandHandler, CommandHandler } from '@nestjs/cqrs';
 import { RefreshTokenCommand } from '../implements/refresh-token.command';
-import { ITokenPort } from '@modules/auth/domain/ports/token/token.port';
-import { ISessionRepository } from '@modules/auth/domain/ports/repositories/session.repository';
+import { ITokenPort } from '@modules/auth/domain/token/token.port';
+import { ISessionRepository } from '@modules/auth/domain/repositories/session.repository';
 import { UnauthorizedException } from '@nestjs/common';
 import { AUTH_TOKENS } from '@modules/auth/auth.tokens';
 import { TokenPair } from '@modules/auth/domain/value-objects/token-pair.vo';

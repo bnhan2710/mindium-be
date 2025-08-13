@@ -1,7 +1,7 @@
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { FollowId } from '../value-objects/follow-id.vo';
 import { UserFollowedEvent, UserUnfollowedEvent } from '../events/follow.event';
-import { AggregateRoot } from '@shared/domain/aggregate-root';
+import { AggregateRoot } from '@shared/domain/base/base.aggregate-root';
 export interface FollowProps {
 	id: FollowId;
 	followerId: UserId;
@@ -9,7 +9,7 @@ export interface FollowProps {
 	createdAt: Date;
 }
 
-export class Follow extends AggregateRoot{
+export class Follow extends AggregateRoot {
 	private readonly props: FollowProps;
 
 	private constructor(props: FollowProps) {
@@ -51,7 +51,6 @@ export class Follow extends AggregateRoot{
 		}
 	}
 
-
 	public createFollowEvent(): void {
 		this.addDomainEvent(
 			new UserFollowedEvent(this.props.followerId, this.props.followeeId),
@@ -63,7 +62,6 @@ export class Follow extends AggregateRoot{
 			new UserUnfollowedEvent(this.props.followerId, this.props.followeeId),
 		);
 	}
-	
 
 	public getFollowerId(): UserId {
 		return this.props.followerId;
@@ -76,5 +74,4 @@ export class Follow extends AggregateRoot{
 	public getCreatedAt(): Date {
 		return this.props.createdAt;
 	}
-
 }

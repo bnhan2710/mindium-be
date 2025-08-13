@@ -16,8 +16,8 @@ import { RefreshTokenCommand } from '../../../application/commands/implements/re
 // import { TokenPair } from '../../../domain/value-objects/token-pair.vo';
 import { ExchangeGoogleTokenDto, RefreshTokenDto, LogoutDto } from '../dtos';
 import { TokenResponseDto } from '@modules/auth/application/dtos';
-import { EnvironmentKeyFactory } from 'src/libs/environment-key.factory';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { EnvironmentKeyFactory } from '@libs/config/environment-key.factory';
+import { JwtAuthGuard } from '../../../../../shared/infrastructure/guards/jwt-auth.guard';
 @ApiTags('Auth')
 @Controller({
 	path: 'auth',
@@ -42,7 +42,7 @@ export class AuthController {
 			access_token: exchangeResult.accessToken,
 			refresh_token: exchangeResult.refreshToken,
 		});
-		const redirectURL = `${this.envFactory.getClientUrl()}/oauth/redirect?${params.toString()}`;
+		const redirectURL = `${this.envFactory.getGoogleOAuthConfig().clientUrl}/oauth/redirect?${params.toString()}`;
 		return { url: redirectURL };
 	}
 

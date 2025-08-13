@@ -1,10 +1,10 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetUserPostsQuery } from '../implements/get-user-post.query';
-import { IPostRepository } from '@modules/posts/domain/port/repositories/post.repository';
+import { IPostRepository } from '@modules/posts/domain/repositories/post.repository';
 import { PostResponseDto } from '../../dtos/post-response.dto';
 import { POST_TOKENS } from '@modules/posts/post.tokens';
-import { PageRequest } from '@shared/common/dtos';
+import { PageRequest } from '@libs/common/dtos';
 
 @QueryHandler(GetUserPostsQuery)
 export class GetUserPostsQueryHandler implements IQueryHandler<GetUserPostsQuery> {

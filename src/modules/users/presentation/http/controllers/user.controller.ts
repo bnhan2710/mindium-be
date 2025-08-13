@@ -4,7 +4,7 @@ import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
 import { GetUserProfileQuery } from '../../../application/queries/implements/get-user-profile.query';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ObjectIdValidationPipe } from '@shared/common/pipes/object-id-validation.pipe';
+import { ObjectIdValidationPipe } from '@libs/common/pipes/object-id-validation.pipe';
 import { UserResponseDto } from '@modules/users/application/dtos/user-response.dto';
 import { CreateUserCommand } from '@modules/users/application/commands/implements/create-user.command';
 import { CreateUserRequestDto, UpdateUserRequestDto } from '../dtos';

@@ -16,9 +16,7 @@ export class User extends AggregateRoot {
 	constructor(props: UserProps) {
 		super(props.id.getValue());
 		if (!props.id || !props.email || !props.name) {
-			throw new InvalidUserDataError(
-				'User must have an id, email, and name',
-			);
+			throw new InvalidUserDataError('User must have an id, email, and name');
 		}
 		this.props = props;
 	}

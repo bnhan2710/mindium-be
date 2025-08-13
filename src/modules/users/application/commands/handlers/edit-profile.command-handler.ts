@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { EditProfileCommand } from '@modules/users/application/commands/implements/edit-profile.command';
-import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
+import { IUserRepository } from '@modules/users/domain/repositories/user.repository';
 import { User } from '@modules/users/domain/entities/user.entity';
 import { UserNotFoundError } from '@modules/users/domain/exceptions';
 import { Inject } from '@nestjs/common';

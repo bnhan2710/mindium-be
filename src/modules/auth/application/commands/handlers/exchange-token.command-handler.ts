@@ -1,6 +1,6 @@
-import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs'; // Thêm ICommandBus
+import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
 import { ExchangeTokenCommand } from '../implements/exchange-token.command';
-import { IOAuthProvider } from '@modules/auth/domain/ports/oauth/oauth-provider';
+import { IOAuthProvider } from '@modules/auth/domain/oauth/oauth-provider';
 import { AuthService } from '@modules/auth/domain/services/authentication-domain.service';
 import { Inject, UnauthorizedException } from '@nestjs/common';
 import { AUTH_TOKENS } from '@modules/auth/auth.tokens';

@@ -4,5 +4,9 @@
 	"printWidth": 90,
 	"tabWidth": 4,
 	"useTabs": true,
-	"semi": true
+	"semi": true,
+	"arrowParens": "always",
+	"bracketSpacing": true,
+	"endOfLine": "lf",
+	"quoteProps": "as-needed"
 }

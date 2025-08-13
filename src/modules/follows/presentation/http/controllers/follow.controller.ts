@@ -12,18 +12,17 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@modules/auth/presentation/http/guards/jwt-auth.guard';
-import { GetUser } from '@shared/common/decorators/get-user.decorator';
+import { JwtAuthGuard } from '@shared/infrastructure/guards/jwt-auth.guard';
+import { GetUser } from '@libs/common/decorators/get-user.decorator';
 import { FollowUserCommand } from '../../../application/commands/implements/follow-user.command';
 import { UnfollowUserCommand } from '../../../application/commands/implements/unfollow-user.command';
 import { GetFollowersQuery } from '../../../application/queries/implements/get-followers.query';
 import { GetFollowingQuery } from '../../../application/queries/implements/get-following.query';
 import { GetFollowCountsQuery } from '../../../application/queries/implements/get-follow-counts.query';
 import { CheckIsFollowingQuery } from '../../../application/queries/implements/check-is-following.query';
-import { FollowUserDto } from '../dtos/follow-user.dto';
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
-import { OffsetPagination } from '@shared/common/dtos';
-import { ObjectIdValidationPipe } from '@shared/common/pipes/object-id-validation.pipe';
+import { OffsetPagination } from '@libs/common/dtos';
+import { ObjectIdValidationPipe } from '@libs/common/pipes/object-id-validation.pipe';
 
 @ApiTags('Follows')
 @UseGuards(JwtAuthGuard)

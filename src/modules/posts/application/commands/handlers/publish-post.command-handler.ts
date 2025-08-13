@@ -1,7 +1,7 @@
 import { CommandHandler } from '@nestjs/cqrs';
 import { ICommandHandler } from '@nestjs/cqrs';
 import { PublishPostCommand } from '../implements/publish-post.command';
-import { IPostRepository } from '@modules/posts/domain/port/repositories/post.repository';
+import { IPostRepository } from '@modules/posts/domain/repositories/post.repository';
 import { Post } from '@modules/posts/domain/entities/post.entity';
 import { POST_TOKENS } from '@modules/posts/post.tokens';
 import { Inject } from '@nestjs/common';

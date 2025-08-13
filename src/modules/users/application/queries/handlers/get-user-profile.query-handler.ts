@@ -1,6 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetUserProfileQuery } from '../implements/get-user-profile.query';
-import { IUserRepository } from '@modules/users/domain/ports/repositories/user.repository';
+import { IUserRepository } from '@modules/users/domain/repositories/user.repository';
 import { Inject } from '@nestjs/common';
 import { USER_TOKENS } from '@modules/users/user.tokens';
 import { UserResponseDto } from '../../dtos/user-response.dto';

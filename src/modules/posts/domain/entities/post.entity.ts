@@ -1,5 +1,5 @@
-import { AggregateRoot } from '@shared/domain/aggregate-root';
-import { SlugGenerator } from '@shared/services';
+import { AggregateRoot } from '@shared/domain/base/base.aggregate-root';
+import { SlugGenerator } from '@libs/services';
 import { Slug } from '../value-objects/slug';
 import { PostId } from '../value-objects/post-id';
 import { Tag } from '../value-objects/tag';
@@ -51,7 +51,6 @@ export class Post extends AggregateRoot {
 	}
 
 	static generatePostSummary(markdownContent, maxLength = 150) {
-
 		const codeRegex = /<code[^>]*>.*?<\/code>/gs;
 		const withoutCode = markdownContent.replace(codeRegex, '');
 

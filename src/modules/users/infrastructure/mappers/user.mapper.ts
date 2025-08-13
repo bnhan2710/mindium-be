@@ -1,6 +1,6 @@
 import { User } from '@modules/users/domain/entities/user.entity';
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
-import { UserDocument } from '../adapters/persistence/schema/user.schema';
+import { UserDocument } from '../persistence/schema/user.schema';
 import { Types } from 'mongoose';
 export class UserMapper {
 	static toDomain(userDoc: UserDocument): User {
