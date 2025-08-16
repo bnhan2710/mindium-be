@@ -1,6 +1,6 @@
-import { DomainError } from '@shared/domain/domain.error';
+import { DomainException } from '@shared/domain/exceptions/domain.exception';
 
-export class AlreadyFollowingException extends DomainError {
+export class AlreadyFollowingException extends DomainException {
 	constructor() {
 		super(`User already followed`, 400);
 		this.name = 'AlreadyFollowingException';

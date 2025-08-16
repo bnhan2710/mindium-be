@@ -1,4 +1,4 @@
-import { DomainEvent } from '@shared/domain/domain-event';
+import { DomainEvent } from '@shared/domain/events/domain-event';
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 
 export class UserFollowedEvent extends DomainEvent {

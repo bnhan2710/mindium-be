@@ -1,7 +1,7 @@
 import { Follow } from '../entities/follow.entity';
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { FollowId } from '../value-objects/follow-id.vo';
-import { IPageRequest } from '@shared/common/types';
+import { IPageRequest } from '@libs/common/types';
 
 export interface IFollowRepository {
 	save(follow: Follow): Promise<void>;

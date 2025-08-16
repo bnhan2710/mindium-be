@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MongoUserRepository } from './infrastructure/adapters/persistence/mongodb/mongo-user.repository';
+import { MongoUserRepository } from './infrastructure/persistence/mongodb/mongo-user.repository';
 import {
 	UserModel,
 	UserSchema,
-} from './infrastructure/adapters/persistence/schema/user.schema';
+} from './infrastructure/persistence/schema/user.schema';
 import { USER_TOKENS } from './user.tokens';
-import { CQRSModule } from '@shared/cqrs/cqrs.module';
+import { CQRSModule } from '@libs/cqrs/cqrs.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from './presentation/http/controllers/user.controller';
 import { GetUserProfileQueryHandler } from './application/queries/handlers/get-user-profile.query-handler';

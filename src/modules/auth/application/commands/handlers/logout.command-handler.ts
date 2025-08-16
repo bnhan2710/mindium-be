@@ -1,9 +1,9 @@
 import { LogoutCommand } from '../implements/logout.command';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ITokenPort } from '@modules/auth/domain/ports/token/token.port';
+import { ITokenPort } from '@modules/auth/domain/token/token.port';
 import { Inject } from '@nestjs/common';
 import { AUTH_TOKENS } from '@modules/auth/auth.tokens';
-import { ISessionRepository } from '@modules/auth/domain/ports/repositories/session.repository';
+import { ISessionRepository } from '@modules/auth/domain/repositories/session.repository';
 import { UnauthorizedException } from '@nestjs/common';
 
 @CommandHandler(LogoutCommand)

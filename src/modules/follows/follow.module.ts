@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
 	FollowDocument,
 	FollowSchema,
-} from './infrastructure/adapter/persistence/schema/follow.schema';
+} from './infrastructure/persistence/schema/follow.schema';
 import { FollowUserHandler } from './application/commands/handlers/follow-user.handler';
 import { UnfollowUserHandler } from './application/commands/handlers/unfollow-user.handler';
 import { GetFollowersHandler } from './application/queries/handlers/get-followers.handler';
@@ -12,7 +12,7 @@ import { GetFollowingHandler } from './application/queries/handlers/get-followin
 import { GetFollowCountsHandler } from './application/queries/handlers/get-follow-counts.handler';
 import { CheckIsFollowingHandler } from './application/queries/handlers/check-is-following.handler';
 import { FollowController } from './presentation/http/controllers/follow.controller';
-import { MongoFollowRepository } from './infrastructure/adapter/persistence/mongodb/mongo-follow.repository';
+import { MongoFollowRepository } from './infrastructure/persistence/mongodb/mongo-follow.repository';
 import { FollowDomainService } from './domain/services/follow-domain.service';
 import { FOLLOW_TOKENS } from './follow-tokens';
 import { UserModule } from '@modules/users/user.module';

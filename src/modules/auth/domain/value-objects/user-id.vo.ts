@@ -1,4 +1,4 @@
-import { ValueObject } from '@shared/domain/value-object';
+import { ValueObject } from '@shared/domain/value-objects/vo';
 
 export class UserId extends ValueObject<string> {
 	constructor(private readonly value: string) {
@@ -10,5 +10,4 @@ export class UserId extends ValueObject<string> {
 			throw new Error('UserId cannot be empty');
 		}
 	}
-
 }

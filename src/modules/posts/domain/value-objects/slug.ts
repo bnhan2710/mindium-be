@@ -1,4 +1,4 @@
-import { SlugGenerator } from '@shared/services';
+import { SlugGenerator } from '@libs/services';
 
 export class Slug {
 	private constructor(private readonly value: string) {}

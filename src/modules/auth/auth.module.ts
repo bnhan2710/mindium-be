@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './presentation/http/controllers/auth.controller';
 import { AUTH_TOKENS } from './auth.tokens';
-import { GoogleIdentityBroker } from './infrastructure/adapters/security/oauth/google-identity-broker';
+import { GoogleIdentityBroker } from './infrastructure/security/oauth/google-identity-broker';
 import { ExchangeTokenCommandHandler } from './application/commands/handlers/exchange-token.command-handler';
 import { LogoutCommandHandler } from './application/commands/handlers/logout.command-handler';
 import { RefreshTokenCommandHanlder } from './application/commands/handlers/refresh-token.command-hanlder';
-import { TokenAdapter } from './infrastructure/adapters/security/token/token.adapter';
-import { MongoSessionRepository } from './infrastructure/adapters/persistence/mongodb/mongo-session.repository';
+import { TokenAdapter } from './infrastructure/security/token/token.adapter';
+import { MongoSessionRepository } from './infrastructure/persistence/mongodb/mongo-session.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
 	SessionModel,
 	SessionSchema,
-} from './infrastructure/adapters/persistence/schema/session.schema';
+} from './infrastructure/persistence/schema/session.schema';
 import { UserModule } from '@modules/users/user.module';
 import { AuthService } from './domain/services/authentication-domain.service';
 import { JwtModule } from '@nestjs/jwt';

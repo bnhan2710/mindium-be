@@ -1,18 +1,20 @@
 import { Module, NestModule } from '@nestjs/common';
-import { SharedModule } from '@shared/shared.module';
-import { ConfigsModule } from '@configs/configs.module';
-import { DatabaseModule } from '@shared/infrastructure/database/mongodb/database.module';
+import { SecurityModule } from '@libs/security/security.module';
+import { ConfigsModule } from '@libs/config/configs.module';
+import { DatabaseModule } from '@libs/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/users/user.module';
 import { PostModule } from './modules/posts/post.module';
-import { CQRSModule } from '@shared/cqrs/cqrs.module';
+import { CQRSModule } from '@libs/cqrs/cqrs.module';
 import { FollowModule } from './modules/follows/follow.module';
+import { MessagingModule } from '@libs/messaging/messaging.module';
 @Module({
 	imports: [
 		ConfigsModule,
 		CQRSModule,
-		SharedModule,
+		SecurityModule,
 		DatabaseModule,
+		MessagingModule,
 		AuthModule,
 		UserModule,
 		PostModule,

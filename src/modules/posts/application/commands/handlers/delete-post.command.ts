@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeletePostCommand } from '../implements/delete-post.command';
-import { IPostRepository } from '@modules/posts/domain/port/repositories/post.repository';
+import { IPostRepository } from '@modules/posts/domain/repositories/post.repository';
 import { PostNotFoundError } from '@modules/posts/domain/exceptions';
 import { POST_TOKENS } from '@modules/posts/post.tokens';
 import { Inject } from '@nestjs/common';

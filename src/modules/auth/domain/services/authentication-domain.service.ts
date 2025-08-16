@@ -1,10 +1,10 @@
 import { Session } from '../entities/session.entity';
 import { TokenPair } from '../value-objects/token-pair.vo';
-import { ISessionRepository } from '../ports/repositories/session.repository';
+import { ISessionRepository } from '../repositories/session.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { AUTH_TOKENS } from '@modules/auth/auth.tokens';
-import { UserProfile } from '../ports/oauth/oauth-provider';
-import { ITokenPort } from '@modules/auth/domain/ports/token/token.port';
+import { UserProfile } from '../oauth/oauth-provider';
+import { ITokenPort } from '@modules/auth/domain/token/token.port';
 @Injectable()
 export class AuthService {
 	constructor(

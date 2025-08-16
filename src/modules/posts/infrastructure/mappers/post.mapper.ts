@@ -1,6 +1,6 @@
 import { Post } from '@modules/posts/domain/entities/post.entity';
 import { Tag } from '@modules/posts/domain/value-objects/tag';
-import { PostDocument } from '../adapters/persistence/schemas/post.schema';
+import { PostDocument } from '../persistence/schemas/post.schema';
 import { Types } from 'mongoose';
 import { PostId } from '@modules/posts/domain/value-objects/post-id';
 

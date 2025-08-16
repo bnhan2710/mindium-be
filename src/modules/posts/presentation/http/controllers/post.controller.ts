@@ -4,9 +4,9 @@ import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PublishPostCommand } from '../../../application/commands/implements/publish-post.command';
-import { OffsetPagination } from '@shared/common/dtos';
+import { OffsetPagination } from '@libs/common/dtos';
 import { PostResponseDto } from '@modules/posts/application/dtos/post-response.dto';
-import { ObjectIdValidationPipe } from '@shared/common/pipes/object-id-validation.pipe';
+import { ObjectIdValidationPipe } from '@libs/common/pipes/object-id-validation.pipe';
 import { CreatePostRequestDto } from '../dtos/create-post.request';
 import { GetPostDetailsQuery } from '@modules/posts/application/queries/implements/get-post-detail.query';
 import { GetUserPostsQuery } from '@modules/posts/application/queries/implements/get-user-post.query';
@@ -14,8 +14,8 @@ import { EditPostCommand } from '@modules/posts/application/commands/implements/
 import { UpdatePostRequestDto } from '../dtos/update-post.request';
 import { DeletePostCommand } from '@modules/posts/application/commands/implements/delete-post.command';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@modules/auth/presentation/http/guards/jwt-auth.guard';
-import { GetUser } from '@shared/common/decorators/get-user.decorator';
+import { JwtAuthGuard } from '@shared/infrastructure/guards/jwt-auth.guard';
+import { GetUser } from '@libs/common/decorators/get-user.decorator';
 @ApiTags('Posts')
 @Controller({
 	path: 'posts',

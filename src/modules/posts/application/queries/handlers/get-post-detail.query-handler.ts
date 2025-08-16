@@ -1,7 +1,7 @@
 import { QueryHandler } from '@nestjs/cqrs';
 import { IQueryHandler } from '@nestjs/cqrs';
 import { GetPostDetailsQuery } from '../implements/get-post-detail.query';
-import { IPostRepository } from '../../../domain/port/repositories/post.repository';
+import { IPostRepository } from '../../../domain/repositories/post.repository';
 import { PostNotFoundError } from '../../../domain/exceptions';
 import { POST_TOKENS } from '@modules/posts/post.tokens';
 import { Inject } from '@nestjs/common';

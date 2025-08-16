@@ -1,5 +1,5 @@
 import { Follow } from '@modules/follows/domain/entities/follow.entity';
-import { FollowDocument } from '../adapter/persistence/schema/follow.schema';
+import { FollowDocument } from '../persistence/schema/follow.schema';
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { FollowId } from '@modules/follows/domain/value-objects/follow-id.vo';
 import { Types } from 'mongoose';

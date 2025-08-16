@@ -1,10 +1,9 @@
 import { randomUUID } from 'crypto';
-import { ValueObject } from '@shared/domain/value-object';
+import { ValueObject } from '@shared/domain/value-objects/vo';
 export class FollowId extends ValueObject<string> {
-	
-		private constructor(value: string) {
-			super(value);
-		}
+	private constructor(value: string) {
+		super(value);
+	}
 
 	protected validate(value: string): void {
 		if (!value || typeof value !== 'string') {
@@ -19,5 +18,4 @@ export class FollowId extends ValueObject<string> {
 	public static create(value: string): FollowId {
 		return new FollowId(value);
 	}
-
 }
