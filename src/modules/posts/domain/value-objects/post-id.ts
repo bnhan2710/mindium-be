@@ -1,22 +1,19 @@
-export class PostId {
-	private readonly value: string;
+import { ValueObject } from "@shared/domain";
 
+export class PostId extends ValueObject<string> {
 	private constructor(value: string) {
-		if (!value) {
+		super(value);
+	}
+
+	protected validate(value: string): void {
+		if (!value || value.trim().length === 0) {
 			throw new Error('PostId cannot be empty');
 		}
-		this.value = value;
+
 	}
 
 	public static create(id: string): PostId {
 		return new PostId(id);
 	}
 
-	public getValue(): string {
-		return this.value;
-	}
-
-	public equals(otherId: PostId): boolean {
-		return this.value === otherId.value;
-	}
 }

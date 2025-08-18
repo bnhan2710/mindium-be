@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { ValueObject } from '@shared/domain/value-objects/vo';
+import { ValueObject } from '@shared/domain/base/value-object';
 export class FollowId extends ValueObject<string> {
 	private constructor(value: string) {
 		super(value);

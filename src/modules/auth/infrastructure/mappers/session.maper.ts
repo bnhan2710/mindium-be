@@ -1,8 +1,5 @@
 import { Session } from '../../domain/entities/session.entity';
-import {
-	SessionDocument,
-	SessionSchema,
-} from '../persistence/schema/session.schema';
+import { SessionDocument, SessionSchema } from '../persistence/schema/session.schema';
 import { Injectable } from '@nestjs/common';
 @Injectable()
 export class SessionMapper {

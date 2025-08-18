@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { IMessageBus, DomainMessage } from '@shared/domain/messaging/message-bus';
-import { DomainEvent } from '@shared/domain/events/domain-event';
+import { DomainEvent } from '@shared/domain/base/domain-event';
 import { EnvironmentKeyFactory } from '@libs/config/environment-key.factory';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -26,7 +26,7 @@ export class RabbitMQMessageBus implements IMessageBus {
 			},
 			config: {
 				exchange: this.environmentKeyFactory.getRabbitMQConfig().exchange,
-				routingKey: event.getEventName().toLowerCase(),
+				routingKey: event.getEventName(),
 			},
 		};
 
@@ -52,4 +52,7 @@ export class RabbitMQMessageBus implements IMessageBus {
 		eventType: string,
 		handler: (event: T) => Promise<void>,
 	): Promise<void> {}
+
 }
+
+

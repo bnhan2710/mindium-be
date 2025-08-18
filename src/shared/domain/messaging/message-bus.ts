@@ -1,4 +1,4 @@
-import { DomainEvent } from '../events/domain-event';
+import { DomainEvent } from '../base/domain-event';
 
 export interface IMessageBus {
 	publishEvent<T extends DomainEvent>(event: T): Promise<void>;

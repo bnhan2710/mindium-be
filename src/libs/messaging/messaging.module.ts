@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
-import { RabbitMQMessageBus } from './rabbitmq/rabbitmq-message-bus';
+import { RabbitMQMessageBus } from '@shared/infrastructure/messaging/rabbitmq.service';
 import { EnvironmentKeyFactory } from '@libs/config/environment-key.factory';
 
 @Global()
@@ -15,15 +15,15 @@ import { EnvironmentKeyFactory } from '@libs/config/environment-key.factory';
 					timeout: 5000,
 				},
 				exchanges: [
-					{
+					{	
 						name: environmentKeyFactory.getRabbitMQConfig().exchange,
 						type: 'topic',
 					},
 				],
 			}),
-		}),
+		}),	
 	],
 	providers: [RabbitMQMessageBus],
-	exports: [RabbitMQMessageBus],
+	exports: [RabbitMQMessageBus, RabbitMQModule],
 })
 export class MessagingModule {}

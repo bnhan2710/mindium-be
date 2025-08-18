@@ -4,7 +4,7 @@ import { Slug } from '../value-objects/slug';
 import { PostId } from '../value-objects/post-id';
 import { Tag } from '../value-objects/tag';
 import { v4 } from 'uuid';
-
+import { PublishPostEvent } from '../events/post-published.event.ts';
 export interface PostProps {
 	id: PostId;
 	title: string;
@@ -37,17 +37,32 @@ export class Post extends AggregateRoot {
 	): Post {
 		const slug = Slug.createFromTitle(title);
 		const tagObjects = tags.map((tag) => Tag.create(tag));
-		return new Post({
+		const summary = Post.generatePostSummary(content, 150);
+		const post = new Post({
 			id: id || PostId.create(v4()),
 			title,
 			content,
 			authorId,
 			slug,
 			tags: tagObjects,
-			summary: Post.generatePostSummary(content, 150),
-			createdAt: createAt ? new Date(createAt) : new Date(),
-			updatedAt: updatedAt ? new Date(updatedAt) : new Date(),
+			summary,
+			createdAt: createAt,
+			updatedAt,
 		});
+
+		post.addDomainEvent(
+			new PublishPostEvent(
+				post.props.id,
+				authorId,
+				title,
+				content,
+				tags,
+				summary,
+				createAt,
+			),
+		)
+
+		return post
 	}
 
 	static generatePostSummary(markdownContent, maxLength = 150) {

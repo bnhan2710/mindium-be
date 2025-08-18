@@ -64,7 +64,6 @@ export class EnvironmentKeyFactory {
 		accessTokenExpiration: string;
 		refreshTokenExpiration: string;
 		saltRounds: number;
-
 	} {
 		return {
 			jwtSecret: this.getString('JWT_SECRET'),
@@ -84,10 +83,9 @@ export class EnvironmentKeyFactory {
 			clientId: this.getString('GOOGLE_OAUTH_CLIENT_ID'),
 			clientSecret: this.getString('GOOGLE_OAUTH_CLIENT_SECRET'),
 			redirectUrl: this.getString('GOOGLE_OAUTH_REDIRECT_URL'),
-			clientUrl: this.getString('CLIENT_URL')
+			clientUrl: this.getString('CLIENT_URL'),
 		};
 	}
-
 
 	getRabbitMQConfig(): RabbitMQConfig {
 		return {
@@ -98,5 +96,4 @@ export class EnvironmentKeyFactory {
 			prefetch: this.getNumber('RABBITMQ_PREFETCH') || 10,
 		};
 	}
-
 }

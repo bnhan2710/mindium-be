@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { ValueObject } from '@shared/domain/value-objects/vo';
+import { ValueObject } from '@shared/domain/base/value-object';
 export class SessionId extends ValueObject<string> {
 	constructor(private readonly value: string) {
 		super(value);

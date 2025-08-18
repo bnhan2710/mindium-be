@@ -9,7 +9,7 @@ export class TokenAdapter implements ITokenPort {
 
 	async generateAccessToken(payload: Record<string, any>): Promise<string> {
 		return jwt.sign(payload, this.envFactory.getAuthConfig().jwtSecret, {
-		expiresIn: this.envFactory.getAuthConfig().accessTokenExpiration,
+			expiresIn: this.envFactory.getAuthConfig().accessTokenExpiration,
 		});
 	}
 

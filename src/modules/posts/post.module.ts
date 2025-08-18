@@ -2,16 +2,15 @@ import { Module } from '@nestjs/common';
 import { PostController } from './presentation/http/controllers/post.controller';
 import { POST_TOKENS } from './post.tokens';
 import { MongoPostRepository } from './infrastructure/persistence/mongodb/mongo-post.repository';
-import {
-	PostSchema,
-	PostModel,
-} from './infrastructure/persistence/schemas/post.schema';
+import { PostSchema, PostModel } from './infrastructure/persistence/schemas/post.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PublishPostHandler } from './application/commands/handlers/publish-post.command-handler';
 import { GetPostDetailsQueryHandler } from './application/queries/handlers/get-post-detail.query-handler';
 import { GetUserPostsQueryHandler } from './application/queries/handlers/get-user-post.query-handler';
 import { EditPostCommandHanler } from './application/commands/handlers/edit-post.command-handler';
 import { DeletePostCommandHandler } from './application/commands/handlers/delete-post.command';
+import { RabbitMQMessageBus } from '@shared/infrastructure/messaging/rabbitmq.service';
+
 
 const CommandHandlers = [
 	PublishPostHandler,
@@ -28,12 +27,18 @@ const Repositories = [
 	},
 ];
 
+const MessageBusProvider = {
+	provide: 'IMessageBus',
+	useClass: RabbitMQMessageBus,
+};
+
 @Module({
 	imports: [MongooseModule.forFeature([{ name: PostModel.name, schema: PostSchema }])],
 	providers: [
 		...CommandHandlers,
 		...QueryHandlers,
 		...Repositories,
+		MessageBusProvider,
 		MongoPostRepository,
 	],
 	exports: [...Repositories, MongoPostRepository],
