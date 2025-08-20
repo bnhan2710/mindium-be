@@ -13,12 +13,19 @@ export class FollowMapper {
 	}
 
 	static toDomain(doc: FollowDocument): Follow {
-		return Follow.reconstitute({
-			id: FollowId.create((doc._id as any).toString()),
-			followerId: UserId.create(doc.followerId.toString()),
-			followeeId: UserId.create(doc.followeeId.toString()),
-			createdAt: (doc as any).createdAt,
-		});
+		const followId = FollowId.create((doc._id as any).toString());
+		const followerId = UserId.create((doc.followerId as any).toString());
+		const followeeId = UserId.create((doc.followeeId as any).toString());
+
+		return Follow.reconstitute(
+			{
+				followerId,
+				followeeId,
+			},
+			followId,
+			(doc as any).createdAt,
+			(doc as any).updatedAt,
+		);
 	}
 
 	static toDomainMany(docs: FollowDocument[]): Follow[] {

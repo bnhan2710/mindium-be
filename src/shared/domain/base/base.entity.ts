@@ -1,35 +1,40 @@
-export abstract class Entity {
-	protected readonly id: string;
-	protected readonly createdAt: Date;
-	protected updatedAt: Date;
+export abstract class BaseEntity<TId, TProps> {
+  protected readonly _id: TId;
+  protected readonly _createdAt: Date;
+  protected _updatedAt: Date;
+  protected readonly props: TProps;
 
-	protected constructor(id: string, createdAt?: Date, updatedAt?: Date) {
-		this.id = id;
-		this.createdAt = createdAt || new Date();
-		this.updatedAt = updatedAt || new Date();
-	}
+  constructor(id: TId, props: TProps, createdAt?: Date, updatedAt?: Date) {
+    this._id = id;
+    this.props = props;
+    this._createdAt = createdAt || new Date();
+    this._updatedAt = updatedAt || new Date();
+  }
 
-	public getId(): string {
-		return this.id;
-	}
+  public getId(): TId {
+    return this._id;
+  }
 
-	public getCreatedAt(): Date {
-		return this.createdAt;
-	}
+  public getProps(): TProps {
+    return this.props;
+  }
 
-	public getUpdatedAt(): Date {
-		return this.updatedAt;
-	}
+  public getCreatedAt(): Date {
+    return this._createdAt;
+  }
 
-	protected touch(): void {
-		this.updatedAt = new Date();
-	}
+  public getUpdatedAt(): Date {
+    return this._updatedAt;
+  }
 
-	public equals(other: Entity): boolean {
-		return this.id === other.id;
-	}
+  protected touch(): void {
+    this._updatedAt = new Date();
+  }
 
-	public hashCode(): string {
-		return this.id;
-	}
+  public equals(entity: BaseEntity<TId, TProps>): boolean {
+    if (!(entity instanceof BaseEntity)) {
+      return false;
+    }
+    return this._id === entity._id;
+  }
 }

@@ -1,12 +1,18 @@
 import { DomainEvent } from './domain-event';
-import { Entity } from './base.entity';
+import { BaseEntity } from './base.entity';
 
-export abstract class AggregateRoot extends Entity {
-	private _domainEvents: DomainEvent[] = [];
 
-	protected constructor(id: string, createdAt?: Date, updatedAt?: Date) {
-		super(id, createdAt, updatedAt);
-	}
+export abstract class AggregateRoot<TId, TProps> extends BaseEntity<TId, TProps> {
+  private _domainEvents: DomainEvent[] = [];
+
+  protected constructor(
+    id: TId,
+    props: TProps,
+    createdAt?: Date,
+    updatedAt?: Date,
+  ) {
+    super(id, props, createdAt, updatedAt);
+  }
 
 	/**
 	 * Add domain event to be published later

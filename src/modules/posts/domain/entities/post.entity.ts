@@ -4,152 +4,161 @@ import { Slug } from '../value-objects/slug';
 import { PostId } from '../value-objects/post-id';
 import { Tag } from '../value-objects/tag';
 import { v4 } from 'uuid';
-import { PublishPostEvent } from '../events/post-published.event.ts';
+import { PublishPostEvent } from '../events/post-published.event';
+
 export interface PostProps {
-	id: PostId;
-	title: string;
-	content: string;
-	authorId: string;
-	slug: Slug;
-	tags: Tag[];
-	summary: string;
-	createdAt?: Date;
-	updatedAt?: Date;
+  title: string;
+  content: string;
+  authorId: string;
+  slug: Slug;
+  tags: Tag[];
+  summary: string;
 }
-export class Post extends AggregateRoot {
-	private readonly props: PostProps;
-	constructor(props: PostProps) {
-		super(props.id.getValue());
-		if (!props.id || !props.title || !props.content || !props.authorId) {
-			throw new Error('Post must have an id, title, content, and author');
-		}
-		this.props = props;
-	}
 
-	public static create(
-		title: string,
-		content: string,
-		tags: string[] = [],
-		authorId: string,
-		id?: PostId,
-		createAt: Date = new Date(),
-		updatedAt: Date = new Date(),
-	): Post {
-		const slug = Slug.createFromTitle(title);
-		const tagObjects = tags.map((tag) => Tag.create(tag));
-		const summary = Post.generatePostSummary(content, 150);
-		const post = new Post({
-			id: id || PostId.create(v4()),
-			title,
-			content,
-			authorId,
-			slug,
-			tags: tagObjects,
-			summary,
-			createdAt: createAt,
-			updatedAt,
-		});
+export class Post extends AggregateRoot<PostId, PostProps> {
+  constructor(
+    id: PostId,
+    props: PostProps,
+    createdAt?: Date,
+    updatedAt?: Date,
+  ) {
+    super(id, props, createdAt, updatedAt);
+  }
 
-		post.addDomainEvent(
-			new PublishPostEvent(
-				post.props.id,
-				authorId,
-				title,
-				content,
-				tags,
-				summary,
-				createAt,
-			),
-		)
+  public static create(
+    title: string,
+    content: string,
+    tags: string[] = [],
+    authorId: string,
+    id?: PostId,
+    createdAt: Date = new Date(),
+    updatedAt: Date = new Date(),
+  ): Post {
+    const slug = Slug.createFromTitle(title);
+    const tagObjects = tags.map((tag) => Tag.create(tag));
+    const summary = Post.generatePostSummary(content, 150);
 
-		return post
-	}
+    const post = new Post(
+      id || PostId.create(v4()),
+      {
+        title,
+        content,
+        authorId,
+        slug,
+        tags: tagObjects,
+        summary,
+      },
+      createdAt,
+      updatedAt,
+    );
 
-	static generatePostSummary(markdownContent, maxLength = 150) {
-		const codeRegex = /<code[^>]*>.*?<\/code>/gs;
-		const withoutCode = markdownContent.replace(codeRegex, '');
+    post.addDomainEvent(
+      new PublishPostEvent(
+        post.getId(),
+        authorId,
+        title,
+        content,
+        tags,
+        summary,
+        createdAt,
+      ),
+    );
 
-		const htmlRegex = /<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g;
-		let summary = withoutCode.replace(htmlRegex, '');
+    return post;
+  }
 
-		summary = summary.replace(/\s+/g, ' ').trim();
+  private static generatePostSummary(
+    markdownContent: string,
+    maxLength = 150,
+  ): string {
+    const codeRegex = /<code[^>]*>.*?<\/code>/gs;
+    const withoutCode = markdownContent.replace(codeRegex, '');
 
-		if (summary.length > maxLength) {
-			summary = summary.substring(0, maxLength) + '...';
-		}
+    const htmlRegex = /<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g;
+    let summary = withoutCode.replace(htmlRegex, '');
 
-		return summary;
-	}
+    summary = summary.replace(/\s+/g, ' ').trim();
 
-	public toPrimitives() {
-		return {
-			id: this.props.id.getValue(),
-			title: this.props.title,
-			content: this.props.content,
-			authorId: this.props.authorId,
-			slug: this.props.slug.getValue(),
-			tags: this.props.tags.map((tag) => tag.getValue()),
-			summary: this.props.summary,
-		};
-	}
+    if (summary.length > maxLength) {
+      summary = summary.substring(0, maxLength) + '...';
+    }
 
-	public getTitle(): string {
-		return this.props.title;
-	}
-	public getContent(): string {
-		return this.props.content;
-	}
-	public getAuthorId(): string {
-		return this.props.authorId;
-	}
-	public getSlug(): Slug {
-		return this.props.slug;
-	}
-	public getTags(): Tag[] {
-		return this.props.tags;
-	}
+    return summary;
+  }
 
-	public getSummary(): string {
-		return this.props.summary;
-	}
+  public toPrimitives() {
+    return {
+      id: this.getId().getValue(),
+      title: this.props.title,
+      content: this.props.content,
+      authorId: this.props.authorId,
+      slug: this.props.slug.getValue(),
+      tags: this.props.tags.map((tag) => tag.getValue()),
+      summary: this.props.summary,
+      createdAt: this.getCreatedAt(),
+      updatedAt: this.getUpdatedAt(),
+    };
+  }
 
-	public generateSlug(title): string {
-		return SlugGenerator.generate(title);
-	}
+  public getTitle(): string {
+    return this.props.title;
+  }
 
-	public static updatePost(
-		post: Post,
-		title?: string,
-		content?: string,
-		tags?: string[],
-	): Post {
-		const updatedProps: PostProps = {
-			...post.props,
-			title: title ?? post.props.title,
-			content: content ?? post.props.content,
-			slug: Slug.createFromTitle(title ?? post.props.title),
-			tags: tags ? tags.map((tag) => Tag.create(tag)) : post.props.tags,
-			updatedAt: new Date(),
-		};
+  public getContent(): string {
+    return this.props.content;
+  }
 
-		return new Post(updatedProps);
-	}
+  public getAuthorId(): string {
+    return this.props.authorId;
+  }
 
-	public addTag(tag: string): void {
-		const newTag = Tag.create(tag);
-		if (this.props.tags.some((t) => t.getValue() === newTag.getValue())) {
-			throw new Error('Tag already exists');
-		}
-		this.props.tags.push(newTag);
-		this.props.updatedAt = new Date();
-	}
+  public getSlug(): Slug {
+    return this.props.slug;
+  }
 
-	public removeTag(tag: string): void {
-		const tagIndex = this.props.tags.findIndex((t) => t.getValue() === tag);
-		if (tagIndex === -1) {
-			throw new Error('Tag not found');
-		}
-		this.props.tags.splice(tagIndex, 1);
-		this.props.updatedAt = new Date();
-	}
+  public getTags(): Tag[] {
+    return this.props.tags;
+  }
+
+  public getSummary(): string {
+    return this.props.summary;
+  }
+
+  // domain behavior
+  public generateSlug(title: string): string {
+    return SlugGenerator.generate(title);
+  }
+
+  public updatePost(
+    title?: string,
+    content?: string,
+    tags?: string[],
+  ): Post {
+    if (title) this.props.title = title;
+    if (content) this.props.content = content;
+    if (tags) this.props.tags = tags.map((tag) => Tag.create(tag));
+
+    this.props.slug = Slug.createFromTitle(this.props.title);
+    this.touch();
+
+    return this;
+  }
+
+  public addTag(tag: string): void {
+    const newTag = Tag.create(tag);
+    if (this.props.tags.some((t) => t.getValue() === newTag.getValue())) {
+      throw new Error('Tag already exists');
+    }
+    this.props.tags.push(newTag);
+    this.touch();
+  }
+
+  public removeTag(tag: string): void {
+    const tagIndex = this.props.tags.findIndex((t) => t.getValue() === tag);
+    if (tagIndex === -1) {
+      throw new Error('Tag not found');
+    }
+    this.props.tags.splice(tagIndex, 1);
+    this.touch();
+  }
 }

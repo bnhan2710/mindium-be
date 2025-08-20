@@ -37,8 +37,17 @@ export class MongoUserRepository implements IUserRepository {
 		return userDocs.map(UserMapper.toDomain);
 	}
 
-	async update(userId: string, user: Partial<User>): Promise<void> {
-		const updateData = UserMapper.toPersistenceUpdate(user);
-		await this.userModel.updateOne({ _id: userId }, updateData).exec();
+	async createIfNotExist(email: string, name: string, avatar?: string): Promise<User> {
+		let user = await this.findByEmail(email);
+		if (!user) {
+			user = User.create(email, name, avatar);
+			await this.save(user);
+		}
+		return user;
+	}
+
+	async update( user: User): Promise<void> {
+		const userDoc = UserMapper.toPersistenceUpdate(user);
+		await this.userModel.updateOne({ _id: user.getId().getValue() }, userDoc).exec();
 	}
 }
