@@ -7,7 +7,7 @@ import {
 	Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { DomainException } from '@shared/domain';
+import { DomainException } from '@shared/domain/exceptions/domain.exception';
 import { ValidationError } from 'class-validator';
 
 @Catch()

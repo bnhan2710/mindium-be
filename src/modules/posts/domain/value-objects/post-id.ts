@@ -1,4 +1,4 @@
-import { ValueObject } from "@shared/domain";
+import { ValueObject } from "@shared/domain/base/value-object";
 
 export class PostId extends ValueObject<string> {
 	private constructor(value: string) {

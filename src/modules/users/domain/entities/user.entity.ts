@@ -1,7 +1,7 @@
 import { UserId } from '../value-objects/user-id.vo';
 import { v4 } from 'uuid';
 import { InvalidUserDataError } from '../exceptions';
-import { AggregateRoot } from '@shared/domain';
+import { AggregateRoot } from '@shared/domain/base/base.aggregate-root';
 
 export interface UserProps {
   email: string;
@@ -21,7 +21,7 @@ export class User extends AggregateRoot<UserId, UserProps> {
 
   }
   public static create(
-	email: string,
+	email: string,  
 	name: string,
 	avatar?: string,
 	bio?: string,

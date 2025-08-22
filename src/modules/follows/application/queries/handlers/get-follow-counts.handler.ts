@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetFollowCountsQuery } from '../implements/get-follow-counts.query';
 import { IFollowRepository } from '@modules/follows/domain/repositories/follow.repository';
-import { FOLLOW_TOKENS } from '@modules/follows/follow-tokens';
+import { FOLLOW_TOKENS } from '@modules/follows/follow.tokens';
 
 export interface GetFollowCountsResult {
 	followersCount: number;

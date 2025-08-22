@@ -9,8 +9,7 @@ import { GetPostDetailsQueryHandler } from './application/queries/handlers/get-p
 import { GetUserPostsQueryHandler } from './application/queries/handlers/get-user-post.query-handler';
 import { EditPostCommandHanler } from './application/commands/handlers/edit-post.command-handler';
 import { DeletePostCommandHandler } from './application/commands/handlers/delete-post.command';
-import { RabbitMQMessageBus } from '@shared/infrastructure/messaging/rabbitmq.service';
-
+import { RabbitMQMessageBus } from '@shared/infrastructure/messaging/rabbitmq/rabbitmq.service';
 
 const CommandHandlers = [
 	PublishPostHandler,

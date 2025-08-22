@@ -1,4 +1,4 @@
-import { DomainEvent } from "@shared/domain";
+import { DomainEvent } from "@shared/domain/base/domain-event";
 import { PostId } from "../value-objects/post-id";
 
 export class PublishPostEvent extends DomainEvent{

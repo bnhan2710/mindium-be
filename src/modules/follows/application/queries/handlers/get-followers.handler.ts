@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { GetFollowersQuery } from '../implements/get-followers.query';
 import { IFollowRepository } from '@modules/follows/domain/repositories/follow.repository';
-import { FOLLOW_TOKENS } from '@modules/follows/follow-tokens';
+import { FOLLOW_TOKENS } from '@modules/follows/follow.tokens';
 import { PageRequest } from '@libs/common/dtos';
 import { QueryBus } from '@nestjs/cqrs';
 import { GetUserByIdsQuery } from '@modules/users/application/queries/implements/get-user-by-ids.query';

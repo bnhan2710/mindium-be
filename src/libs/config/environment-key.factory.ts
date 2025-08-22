@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModuleOptions } from '@nestjs/jwt';
 import { isBooleanString } from 'class-validator';
 import { RabbitMQConfig } from './rabbitmq.config';
+import { RedisConfig } from './redis.config';
 
 @Injectable()
 export class EnvironmentKeyFactory {
@@ -94,6 +95,20 @@ export class EnvironmentKeyFactory {
 			exchange: this.getString('RABBITMQ_EXCHANGE') || 'blog-system-exchange',
 			routingKey: this.getString('RABBITMQ_ROUTING_KEY') || 'blog.events',
 			prefetch: this.getNumber('RABBITMQ_PREFETCH') || 10,
+		};
+	}
+
+	getRedisConfig(): RedisConfig {
+		return {
+			host: this.configService.get('REDIS_HOST') || 'localhost',
+			port: Number(this.configService.get('REDIS_PORT') || 6488),
+			password: this.configService.get('REDIS_PASSWORD') || undefined,
+			db: this.configService.get('REDIS_DB')
+				? Number(this.configService.get('REDIS_DB'))
+				: undefined,
+			defaultTtlSeconds: this.configService.get('REDIS_TTL_SECONDS')
+				? Number(this.configService.get('REDIS_TTL_SECONDS'))
+				: 60,
 		};
 	}
 }

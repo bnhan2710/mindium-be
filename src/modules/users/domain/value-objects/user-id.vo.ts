@@ -1,4 +1,4 @@
-import { ValueObject } from '@shared/domain';
+import { ValueObject } from '@shared/domain/base/value-object';
 
 export class UserId extends ValueObject<string> {
 	private readonly value: string;

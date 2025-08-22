@@ -1,5 +1,5 @@
 import { SlugGenerator } from '@libs/services';
-import { ValueObject } from '@shared/domain';
+import { ValueObject } from '@shared/domain/base/value-object';
 
 export class Slug extends ValueObject<string> {
 	private constructor(value: string) {
