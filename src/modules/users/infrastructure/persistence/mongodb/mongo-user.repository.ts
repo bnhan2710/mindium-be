@@ -42,11 +42,13 @@ export class MongoUserRepository implements IUserRepository {
 		if (!user) {
 			user = User.create(email, name, avatar);
 			await this.save(user);
+			const existingUser = await this.findByEmail(email);
+			return existingUser!;
 		}
 		return user;
 	}
 
-	async update( user: User): Promise<void> {
+	async update(user: User): Promise<void> {
 		const userDoc = UserMapper.toPersistenceUpdate(user);
 		await this.userModel.updateOne({ _id: user.getId().getValue() }, userDoc).exec();
 	}

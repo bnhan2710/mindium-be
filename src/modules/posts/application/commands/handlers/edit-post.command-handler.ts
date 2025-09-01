@@ -22,11 +22,7 @@ export class EditPostCommandHanler implements ICommandHandler<EditPostCommand> {
 		if (!post) {
 			throw new PostNotFoundError();
 		}
-		const updatedPost = post.updatePost(
-			title,
-			content,
-			tags,
-		);
+		const updatedPost = post.updatePost(title, content, tags);
 
 		const updatedId = await this.postRepository.update(updatedPost);
 

@@ -22,6 +22,6 @@ export class EditProfileCommandHandler implements ICommandHandler<EditProfileCom
 
 		user.editProfile(name, avatar, bio);
 
-		await this.userRepository.update( user);
+		await this.userRepository.update(user);
 	}
 }

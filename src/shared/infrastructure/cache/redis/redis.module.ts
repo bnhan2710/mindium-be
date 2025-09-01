@@ -1,37 +1,26 @@
-import { Module, Global, OnModuleInit, Inject, OnModuleDestroy } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
+import { RedisModule as IORedisModule } from '@nestjs-modules/ioredis';
 import { EnvironmentKeyFactory } from '@libs/config/environment-key.factory';
-import Redis from 'ioredis';
-import { Logger } from '@nestjs/common';
+import { RedisCacheRepository } from './redis-cache.repository';
+import { CACHE_TOKENS } from '@shared/di-tokens';
 
 @Global()
 @Module({
-  providers: [
-    {
-      provide: 'REDIS_CLIENT',
-      useFactory: (enviromentKeyFactory: EnvironmentKeyFactory) => {
-        return new Redis({
-            host: enviromentKeyFactory.getRedisConfig().host,
-            port: enviromentKeyFactory.getRedisConfig().port,
-            password: enviromentKeyFactory.getRedisConfig().password,
-            db: enviromentKeyFactory.getRedisConfig().db,
-            });
-      },
-      inject: [EnvironmentKeyFactory],
-    },
-  ],
-  exports: ['REDIS_CLIENT'],
+	imports: [
+		IORedisModule.forRootAsync({
+			inject: [EnvironmentKeyFactory],
+			useFactory: (environmentKeyFactory: EnvironmentKeyFactory) => ({
+				type: 'single',
+				url: `redis://${environmentKeyFactory.getRedisConfig().host}:${environmentKeyFactory.getRedisConfig().port}`,
+			}),
+		}),
+	],
+	providers: [
+		{
+			provide: CACHE_TOKENS.CACHE_REPOSITORY,
+			useClass: RedisCacheRepository,
+		},
+	],
+	exports: [CACHE_TOKENS.CACHE_REPOSITORY],
 })
-export class RedisModule implements OnModuleDestroy, OnModuleInit {
-  constructor(@Inject('REDIS_CLIENT') private readonly redisClient: Redis) {}
-    private readonly logger = new Logger(RedisModule.name);
-
-
-    onModuleInit() {
-        this.logger.log('Redis module initialized');
-    }
-
-    onModuleDestroy() {
-        this.redisClient.quit();
-        this.logger.log('Redis module destroyed');
-    }
-}
+export class RedisModule {}

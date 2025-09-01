@@ -20,7 +20,7 @@ export class UserMapper {
 
 	static toPersistence(user: User): Partial<UserDocument> {
 		return {
-			_id: new Types.ObjectId(user.getId().getValue()),
+			_id: new Types.ObjectId(),
 			email: user.getEmail(),
 			name: user.getName(),
 			avatar: user.getAvatarUrl(),

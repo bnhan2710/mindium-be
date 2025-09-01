@@ -14,7 +14,7 @@ export class RabbitMQMessageBus implements IMessageBus {
 		private readonly environmentKeyFactory: EnvironmentKeyFactory,
 	) {}
 
-	async publishEvent<T extends DomainEvent>(event: T): Promise<void> {
+	async publishEvent<T extends DomainEvent>(event: T,): Promise<void> {
 		const message: DomainMessage<T> = {
 			payload: event,
 			metadata: {
@@ -30,6 +30,8 @@ export class RabbitMQMessageBus implements IMessageBus {
 			},
 		};
 
+		console.log(event)
+
 		await this.amqpConnection.publish(
 			message.config.exchange,
 			message.config.routingKey,
@@ -37,6 +39,8 @@ export class RabbitMQMessageBus implements IMessageBus {
 		);
 
 		this.logger.log(`Published event: ${event.getEventName()}`);
+		this.logger.debug(`Event details: ${JSON.stringify(message)}`);
+		this.logger.debug(`Using exchange: ${message.config.exchange} with routing key: ${message.config.routingKey}`);
 	}
 
 	async publishEvents(events: DomainEvent[]): Promise<void> {
@@ -52,7 +56,4 @@ export class RabbitMQMessageBus implements IMessageBus {
 		eventType: string,
 		handler: (event: T) => Promise<void>,
 	): Promise<void> {}
-
 }
-
-

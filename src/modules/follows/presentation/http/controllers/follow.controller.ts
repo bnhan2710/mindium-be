@@ -120,7 +120,6 @@ export class FollowController {
 			UserId.create(userId),
 			UserId.create(followeeId),
 		);
-
 		return await this.queryBus.execute(query);
 	}
 }

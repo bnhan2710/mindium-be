@@ -16,10 +16,6 @@ export class CreateUserIfNotExistCommandHandler
 
 	async execute(command: CreateUserIfNotExistCommand): Promise<User> {
 		const { email, name, avatar } = command;
-		return await this.userRepository.createIfNotExist(
-			email,
-			name,
-			avatar,
-		);
+		return await this.userRepository.createIfNotExist(email, name, avatar);
 	}
 }

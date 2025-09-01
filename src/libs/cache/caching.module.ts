@@ -6,5 +6,3 @@ import { RedisModule } from '@shared/infrastructure/cache/redis/redis.module';
 	exports: [RedisModule],
 })
 export class CachingModule {}
-
-

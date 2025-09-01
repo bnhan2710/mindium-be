@@ -13,7 +13,7 @@ export class PublishPostHandler implements ICommandHandler<PublishPostCommand> {
 		@Inject(POST_TOKENS.POST_REPOSITORY)
 		private readonly postRepository: IPostRepository,
 		@Inject('IMessageBus')
-		private readonly messageBus: IMessageBus
+		private readonly messageBus: IMessageBus,
 	) {}
 
 	async execute(command: PublishPostCommand): Promise<{ id: string }> {

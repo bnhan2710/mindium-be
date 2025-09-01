@@ -20,7 +20,7 @@ export class PostMapper {
 			},
 			(postDoc as any).createdAt,
 			(postDoc as any).updatedAt,
-		)
+		);
 	}
 
 	static toPersistence(post: Post): Partial<PostDocument> {
