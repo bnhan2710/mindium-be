@@ -2,7 +2,7 @@ import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { FollowId } from '../value-objects/follow-id.vo';
 import { UserFollowedEvent, UserUnfollowedEvent } from '../events/follow.event';
 import { AggregateRoot } from '@shared/domain/base/base.aggregate-root';
-import { v4 } from 'uuid';
+import { v7 } from 'uuid';
 export interface FollowProps {
 	followerId: UserId;
 	followeeId: UserId;
@@ -20,7 +20,7 @@ export class Follow extends AggregateRoot<FollowId, FollowProps> {
 	}
 
 	public static create(followerId: UserId, followeeId: UserId): Follow {
-		const followId = FollowId.create(v4());
+		const followId = FollowId.create(v7());
 		const follow = new Follow(followId, { followerId, followeeId }, new Date());
 
 		follow.addDomainEvent(new UserFollowedEvent(followerId, followeeId));
@@ -34,7 +34,7 @@ export class Follow extends AggregateRoot<FollowId, FollowProps> {
 		createdAt?: Date,
 		updatedAt?: Date,
 	): Follow {
-		const followId = id || FollowId.create(v4());
+		const followId = id || FollowId.create(v7());
 		return new Follow(followId, props, createdAt, updatedAt);
 	}
 

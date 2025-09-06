@@ -3,7 +3,7 @@ import { SlugGenerator } from '@libs/services';
 import { Slug } from '../value-objects/slug';
 import { PostId } from '../value-objects/post-id';
 import { Tag } from '../value-objects/tag';
-import { v4 } from 'uuid';
+import { v7 } from 'uuid';
 import { PublishPostEvent } from '../events/post-published.event';
 
 export interface PostProps {
@@ -25,7 +25,6 @@ export class Post extends AggregateRoot<PostId, PostProps> {
 		content: string,
 		tags: string[] = [],
 		authorId: string,
-		id?: PostId,
 		createdAt: Date = new Date(),
 		updatedAt: Date = new Date(),
 	): Post {
@@ -34,7 +33,7 @@ export class Post extends AggregateRoot<PostId, PostProps> {
 		const summary = Post.generatePostSummary(content, 150);
 
 		const post = new Post(
-			id || PostId.create(v4()),
+			PostId.create(v7()),
 			{
 				title,
 				content,
@@ -47,9 +46,11 @@ export class Post extends AggregateRoot<PostId, PostProps> {
 			updatedAt,
 		);
 
+
+
 		post.addDomainEvent(
 			new PublishPostEvent(
-				post.getId(),
+				post.getId().getValue(),
 				authorId,
 				title,
 				content,

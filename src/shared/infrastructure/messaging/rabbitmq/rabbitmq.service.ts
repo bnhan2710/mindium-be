@@ -3,7 +3,8 @@ import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { IMessageBus, DomainMessage } from '@shared/domain/messaging/message-bus';
 import { DomainEvent } from '@shared/domain/base/domain-event';
 import { EnvironmentKeyFactory } from '@libs/config/environment-key.factory';
-import { v4 as uuidv4 } from 'uuid';
+import { v7 } from 'uuid';
+import { config } from 'process';
 
 @Injectable()
 export class RabbitMQMessageBus implements IMessageBus {
@@ -18,7 +19,7 @@ export class RabbitMQMessageBus implements IMessageBus {
 		const message: DomainMessage<T> = {
 			payload: event,
 			metadata: {
-				messageId: uuidv4(),
+				messageId: v7(),
 				correlationId: event.aggregateId,
 				timestamp: new Date(),
 				source: 'blog-system',
@@ -29,18 +30,14 @@ export class RabbitMQMessageBus implements IMessageBus {
 				routingKey: event.getEventName(),
 			},
 		};
-
-		console.log(event)
-
 		await this.amqpConnection.publish(
 			message.config.exchange,
 			message.config.routingKey,
 			message,
 		);
 
+
 		this.logger.log(`Published event: ${event.getEventName()}`);
-		this.logger.debug(`Event details: ${JSON.stringify(message)}`);
-		this.logger.debug(`Using exchange: ${message.config.exchange} with routing key: ${message.config.routingKey}`);
 	}
 
 	async publishEvents(events: DomainEvent[]): Promise<void> {

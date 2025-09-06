@@ -7,6 +7,7 @@ import { UserModule } from './modules/users/user.module';
 import { PostModule } from './modules/posts/post.module';
 import { CQRSModule } from '@libs/cqrs/cqrs.module';
 import { FollowModule } from './modules/follows/follow.module';
+import { FeedModule } from '@modules/feed/feed.module';
 import { MessagingModule } from '@libs/messaging/messaging.module';
 import { CachingModule } from '@libs/cache/caching.module';
 @Module({
@@ -20,6 +21,7 @@ import { CachingModule } from '@libs/cache/caching.module';
 		AuthModule,
 		UserModule,
 		PostModule,
+		FeedModule,
 		FollowModule,
 	],
 	controllers: [],

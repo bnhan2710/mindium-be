@@ -1,4 +1,4 @@
-import { v4 } from 'uuid';
+import { v7 } from 'uuid';
 import { ValueObject } from '@shared/domain/base/value-object';
 export class FollowId extends ValueObject<string> {
 	private constructor(value: string) {
@@ -12,7 +12,7 @@ export class FollowId extends ValueObject<string> {
 	}
 
 	public generate(): string {
-		return v4();
+		return v7();
 	}
 
 	public static create(value: string): FollowId {

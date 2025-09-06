@@ -1,22 +1,41 @@
 import { RabbitSubscribe } from "@golevelup/nestjs-rabbitmq";
-import { Injectable, Logger } from "@nestjs/common";
-import { EventBus } from "@nestjs/cqrs";
-import { PublishPostEventHandler } from "@modules/feed/application/events/handlers/post.created.event-handler";
+import { Injectable, Logger, Inject } from "@nestjs/common";
+import { FanoutService, PostFanoutData } from "@modules/feed/domain/services/fanout.service";
+import { FEED_TOKENS } from "@modules/feed/feed.tokens";
 
 @Injectable()
-@RabbitSubscribe({
-    exchange: 'blog.events',
-    routingKey: 'post.published',
-    queue: 'feed.queue',
-})
-export class PostPublishedSubscriber{
+export class PostPublishedSubscriber {
     private readonly logger = new Logger(PostPublishedSubscriber.name);
 
-    constructor(private readonly eventBus: EventBus){}
+    constructor(
+        @Inject(FEED_TOKENS.FANOUT_SERVICE)
+        private readonly fanoutPipeline: FanoutService,
+    ) {}
 
-    async handleMessage(msg: any){
-        this.logger.log(`Received message: ${JSON.stringify(msg)}`);
-        // const event = new PublishPostEventHandler();
-        // this.eventBus.publish(event);
+    @RabbitSubscribe({
+        exchange: 'blog.events',
+        routingKey: 'post.published',
+        queue: 'feed.post.published.queue',
+        queueOptions: {
+            durable: true,
+        },
+    })
+    async handleMessage(msg: any) {
+            const eventPayload = msg.payload;
+            this.logger.log(`Received event: post.published with payload: ${JSON.stringify(eventPayload)}`);
+
+            const postData: PostFanoutData = {
+                postId: eventPayload.postId._value || eventPayload.postId,
+                authorId: eventPayload.authorId,
+                title: eventPayload.title,
+                content: eventPayload.content,
+                summary: eventPayload.summary,
+                tags: eventPayload.tags || [],
+                createdAt: new Date(eventPayload.createdAt),
+            };
+
+            console.log('Post Data:', postData);
+            
+            await this.fanoutPipeline.run(postData);
     }
 }

@@ -1,5 +1,5 @@
 import { UserId } from '../value-objects/user-id.vo';
-import { v4 } from 'uuid';
+import { v7 } from 'uuid';
 import { InvalidUserDataError } from '../exceptions';
 import { AggregateRoot } from '@shared/domain/base/base.aggregate-root';
 
@@ -28,7 +28,7 @@ export class User extends AggregateRoot<UserId, UserProps> {
 				'Email and name are required to create a user',
 			);
 		}
-		const userId = id || UserId.create(v4());
+		const userId = id || UserId.create(v7());
 		const user = new User(userId, { email, name, avatar, bio }, createdAt, updatedAt);
 		return user;
 	}

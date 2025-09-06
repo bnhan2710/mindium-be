@@ -11,13 +11,9 @@ export class RedisCacheRepository implements ICacheRepository {
 	) {}
 
 	async get<T>(key: string): Promise<T | null> {
-		try {
 			const value = await this.redis.get(key);
 			if (!value) return null;
 			return JSON.parse(value) as T;
-		} catch (error) {
-			return null;
-		}
 	}
 
 	async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {

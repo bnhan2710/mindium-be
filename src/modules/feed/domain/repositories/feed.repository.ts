@@ -1,5 +1,5 @@
 import { OffsetPagination } from "@libs/common/dtos";
 
-export interface FeedRepository {
-  getFeed(userId: string, pagination : OffsetPagination)
+export interface IFeedRepository {
+  getUserFeed(userId: string, pagination : OffsetPagination)
 }

@@ -14,10 +14,14 @@ import { EnvironmentKeyFactory } from '@libs/config/environment-key.factory';
 					wait: true,
 					timeout: 5000,
 				},
+				enableControllerDiscovery: true,
 				exchanges: [
 					{
 						name: environmentKeyFactory.getRabbitMQConfig().exchange,
 						type: 'topic',
+						options: {
+							durable: true,
+						},
 					},
 				],
 			}),

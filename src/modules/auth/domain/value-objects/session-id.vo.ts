@@ -1,4 +1,4 @@
-import { v4 } from 'uuid';
+import { v7 } from 'uuid';
 import { ValueObject } from '@shared/domain/base/value-object';
 export class SessionId extends ValueObject<string> {
 	constructor(private readonly value: string) {
@@ -18,7 +18,7 @@ export class SessionId extends ValueObject<string> {
 	}
 
 	public static generate(): SessionId {
-		const uuid = v4();
+		const uuid = v7();
 		return new SessionId(uuid);
 	}
 }

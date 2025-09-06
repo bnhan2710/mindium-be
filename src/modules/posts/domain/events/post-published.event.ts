@@ -3,15 +3,15 @@ import { PostId } from '../value-objects/post-id';
 
 export class PublishPostEvent extends DomainEvent {
 	constructor(
-		public readonly postId: PostId,
+		public readonly postId: string,
 		public readonly authorId: string,
 		public readonly title: string,
 		public readonly content: string,
 		public readonly tags: string[] = [],
 		public readonly summary: string,
-		public readonly publishedAt: Date = new Date(),
+		public readonly createdAt: Date,
 	) {
-		super(postId.getValue());
+		super(postId);
 	}
 
 	getEventName(): string {
