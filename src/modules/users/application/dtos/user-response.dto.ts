@@ -23,7 +23,7 @@ export class UserResponseDto {
 
 	static fromDomain(user: User): UserResponseDto {
 		return new UserResponseDto(
-			user.getId(),
+			user.getId().getValue(),
 			user.getEmail(),
 			user.getName(),
 			user.getAvatarUrl(),

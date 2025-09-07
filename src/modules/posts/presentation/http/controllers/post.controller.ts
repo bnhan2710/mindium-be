@@ -6,7 +6,7 @@ import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PublishPostCommand } from '../../../application/commands/implements/publish-post.command';
 import { OffsetPagination } from '@libs/common/dtos';
 import { PostResponseDto } from '@modules/posts/application/dtos/post-response.dto';
-import { ObjectIdValidationPipe } from '@libs/common/pipes/object-id-validation.pipe';
+import { ObjectIdValidationPipe } from '@shared/infrastructure/pipes/object-id-validation.pipe';
 import { CreatePostRequestDto } from '../dtos/create-post.request';
 import { GetPostDetailsQuery } from '@modules/posts/application/queries/implements/get-post-detail.query';
 import { GetUserPostsQuery } from '@modules/posts/application/queries/implements/get-user-post.query';

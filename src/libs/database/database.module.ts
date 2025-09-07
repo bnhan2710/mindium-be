@@ -1,4 +1,4 @@
-import { MongoDbModule } from './mongodb/mongodb.module';
+import { MongoDbModule } from '@shared/infrastructure/database/mongodb/mongodb.module';
 import { Module } from '@nestjs/common';
 
 @Module({

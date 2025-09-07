@@ -5,20 +5,22 @@ import { Types } from 'mongoose';
 export class UserMapper {
 	static toDomain(userDoc: UserDocument): User {
 		const userId = UserId.create((userDoc._id as any).toString());
-		return User.create(
+		return new User(
+			userId,
 			{
 				email: userDoc.email,
 				name: userDoc.name,
 				avatar: userDoc.avatar,
 				bio: userDoc.bio,
 			},
-			userId,
+			(userDoc as any).createdAt,
+			(userDoc as any).updatedAt,
 		);
 	}
 
 	static toPersistence(user: User): Partial<UserDocument> {
 		return {
-			_id: new Types.ObjectId(user.getId()),
+			_id: new Types.ObjectId(),
 			email: user.getEmail(),
 			name: user.getName(),
 			avatar: user.getAvatarUrl(),
@@ -26,7 +28,7 @@ export class UserMapper {
 		};
 	}
 
-	static toPersistenceUpdate(user: Partial<User>): Partial<UserDocument> {
+	static toPersistenceUpdate(user: User): Partial<UserDocument> {
 		const result: Partial<UserDocument> = {};
 
 		if (user.getName) {
@@ -42,18 +44,5 @@ export class UserMapper {
 		}
 
 		return result;
-	}
-
-	static reconstitute(userDoc: UserDocument): User {
-		const userId = UserId.create((userDoc._id as any).toString());
-		return User.create(
-			{
-				email: userDoc.email,
-				name: userDoc.name,
-				avatar: userDoc.avatar,
-				bio: userDoc.bio,
-			},
-			userId,
-		);
 	}
 }

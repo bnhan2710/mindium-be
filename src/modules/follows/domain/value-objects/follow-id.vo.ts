@@ -1,5 +1,5 @@
-import { randomUUID } from 'crypto';
-import { ValueObject } from '@shared/domain/value-objects/vo';
+import { v7 } from 'uuid';
+import { ValueObject } from '@shared/domain/base/value-object';
 export class FollowId extends ValueObject<string> {
 	private constructor(value: string) {
 		super(value);
@@ -11,8 +11,8 @@ export class FollowId extends ValueObject<string> {
 		}
 	}
 
-	public static generate(): FollowId {
-		return new FollowId(randomUUID());
+	public generate(): string {
+		return v7();
 	}
 
 	public static create(value: string): FollowId {

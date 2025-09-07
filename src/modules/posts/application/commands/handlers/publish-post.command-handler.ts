@@ -2,6 +2,7 @@ import { CommandHandler } from '@nestjs/cqrs';
 import { ICommandHandler } from '@nestjs/cqrs';
 import { PublishPostCommand } from '../implements/publish-post.command';
 import { IPostRepository } from '@modules/posts/domain/repositories/post.repository';
+import { IMessageBus } from '@shared/domain/messaging/message-bus';
 import { Post } from '@modules/posts/domain/entities/post.entity';
 import { POST_TOKENS } from '@modules/posts/post.tokens';
 import { Inject } from '@nestjs/common';
@@ -11,6 +12,8 @@ export class PublishPostHandler implements ICommandHandler<PublishPostCommand> {
 	constructor(
 		@Inject(POST_TOKENS.POST_REPOSITORY)
 		private readonly postRepository: IPostRepository,
+		@Inject('IMessageBus')
+		private readonly messageBus: IMessageBus,
 	) {}
 
 	async execute(command: PublishPostCommand): Promise<{ id: string }> {
@@ -19,6 +22,10 @@ export class PublishPostHandler implements ICommandHandler<PublishPostCommand> {
 		const post = Post.create(title, content, tags, authorId);
 
 		const createdId = await this.postRepository.save(post);
+
+		await this.messageBus.publishEvents(post.getUncommittedEvents());
+
+		post.markEventsAsCommitted();
 
 		return { id: createdId };
 	}

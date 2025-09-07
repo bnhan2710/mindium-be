@@ -6,7 +6,6 @@ import { Post } from '@modules/posts/domain/entities/post.entity';
 import { POST_TOKENS } from '@modules/posts/post.tokens';
 import { Inject } from '@nestjs/common';
 import { PostNotFoundError } from '@modules/posts/domain/exceptions';
-import { PostResponseDto } from '../../dtos/post-response.dto';
 
 @CommandHandler(EditPostCommand)
 export class EditPostCommandHanler implements ICommandHandler<EditPostCommand> {
@@ -23,7 +22,7 @@ export class EditPostCommandHanler implements ICommandHandler<EditPostCommand> {
 		if (!post) {
 			throw new PostNotFoundError();
 		}
-		const updatedPost = Post.updatePost(post, title, content);
+		const updatedPost = post.updatePost(title, content, tags);
 
 		const updatedId = await this.postRepository.update(updatedPost);
 

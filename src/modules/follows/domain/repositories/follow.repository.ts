@@ -21,6 +21,7 @@ export interface IFollowRepository {
 		following: Follow[];
 		total: number;
 	}>;
+	getFollowerIds(userId: string): Promise<string[]>;
 	isFollowing(followerId: UserId, followeeId: UserId): Promise<boolean>;
 	getFollowCounts(userId: UserId): Promise<{
 		followersCount: number;

@@ -14,7 +14,7 @@ import { CheckIsFollowingHandler } from './application/queries/handlers/check-is
 import { FollowController } from './presentation/http/controllers/follow.controller';
 import { MongoFollowRepository } from './infrastructure/persistence/mongodb/mongo-follow.repository';
 import { FollowDomainService } from './domain/services/follow-domain.service';
-import { FOLLOW_TOKENS } from './follow-tokens';
+import { FOLLOW_TOKENS } from './follow.tokens';
 import { UserModule } from '@modules/users/user.module';
 
 const commandHandlers = [FollowUserHandler, UnfollowUserHandler];

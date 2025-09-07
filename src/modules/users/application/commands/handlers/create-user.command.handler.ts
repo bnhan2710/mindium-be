@@ -21,12 +21,7 @@ export class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
 			throw new UserAlreadyExistsError(email);
 		}
 
-		const user = User.create({
-			email,
-			name,
-			avatar,
-		});
-
+		const user = User.create(email, name, avatar);
 		await this.userRepository.save(user);
 	}
 }
