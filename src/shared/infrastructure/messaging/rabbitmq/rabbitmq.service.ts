@@ -15,7 +15,7 @@ export class RabbitMQMessageBus implements IMessageBus {
 		private readonly environmentKeyFactory: EnvironmentKeyFactory,
 	) {}
 
-	async publishEvent<T extends DomainEvent>(event: T,): Promise<void> {
+	async publishEvent<T extends DomainEvent>(event: T): Promise<void> {
 		const message: DomainMessage<T> = {
 			payload: event,
 			metadata: {
@@ -35,7 +35,6 @@ export class RabbitMQMessageBus implements IMessageBus {
 			message.config.routingKey,
 			message,
 		);
-
 
 		this.logger.log(`Published event: ${event.getEventName()}`);
 	}

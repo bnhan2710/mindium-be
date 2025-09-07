@@ -46,14 +46,12 @@ export class Post extends AggregateRoot<PostId, PostProps> {
 			updatedAt,
 		);
 
-
-
 		post.addDomainEvent(
 			new PublishPostEvent(
 				post.getId().getValue(),
 				authorId,
 				title,
-				content,
+				slug.toString(),
 				tags,
 				summary,
 				createdAt,

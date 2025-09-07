@@ -6,9 +6,7 @@ export class SessionId extends ValueObject<string> {
 	}
 
 	protected validate(value: string): void {
-		if (!value || !this.isValidUUID(value)) {
-			throw new Error('Invalid session ID');
-		}
+		
 	}
 
 	private isValidUUID(value: string): boolean {

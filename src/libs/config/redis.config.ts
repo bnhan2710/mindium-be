@@ -4,6 +4,3 @@ export interface RedisConfig {
 	db?: number;
 	defaultTtlSeconds?: number;
 }
-
-
-

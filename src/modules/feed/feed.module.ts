@@ -8,31 +8,33 @@ import { RedisCacheRepository } from '@shared/infrastructure/cache/redis/redis-c
 import { GetUserFeedHandler } from './application/queries/handlers/get-user-feed.handler';
 import { FeedController } from './presentation/http/feed.controller';
 import { CACHE_TOKENS } from '@shared/di-tokens';
-import { RedisModule } from '@shared/infrastructure/cache/redis/redis.module'; 
+import { RedisModule } from '@shared/infrastructure/cache/redis/redis.module';
+import { RedisFeedRepository } from './insfrastructure/redis/redis-feed.repository';
 
 const QueryHandlers = [GetUserFeedHandler];
 
-const Repositories = [ ]
+const Repositories = [
+	{
+		provide: FEED_TOKENS.FEED_REPOSITORY,
+		useClass: RedisFeedRepository,
+	},
+];
 
 @Module({
-	imports: [
-		CqrsModule,
-		FollowModule, 
-		RedisModule
-	],
-	// controllers: [FeedController],
+	imports: [CqrsModule, FollowModule, RedisModule],
+	controllers: [FeedController],
 	providers: [
-	// 	...QueryHandlers,
+		...QueryHandlers,
+		...Repositories,
 		PostPublishedSubscriber,
 		{
 			provide: FEED_TOKENS.FANOUT_SERVICE,
 			useClass: RabbitMQFanout,
 		},
-	// 	{
-	// 		provide: CACHE_TOKENS.CACHE_REPOSITORY,
-	// 		useClass: RedisCacheRepository,
-	// 	}
+		{
+			provide: CACHE_TOKENS.CACHE_REPOSITORY,
+			useClass: RedisCacheRepository,
+		}
 	],
 })
-
 export class FeedModule {}

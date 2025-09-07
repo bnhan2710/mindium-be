@@ -1,13 +1,5 @@
-export interface FanoutService {
-    run(postData: PostFanoutData): Promise<void>;
-}
+import { FeedItem } from "../entities/feed-item";
 
-export interface PostFanoutData {
-    postId: string;
-    authorId: string;
-    title: string;
-    content: string;
-    summary: string;
-    tags: string[];
-    createdAt: Date
+export interface FanoutService {
+	run(feedItem: FeedItem): Promise<void>;
 }

@@ -11,9 +11,9 @@ export class RedisCacheRepository implements ICacheRepository {
 	) {}
 
 	async get<T>(key: string): Promise<T | null> {
-			const value = await this.redis.get(key);
-			if (!value) return null;
-			return JSON.parse(value) as T;
+		const value = await this.redis.get(key);
+		if (!value) return null;
+		return JSON.parse(value) as T;
 	}
 
 	async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
@@ -40,7 +40,7 @@ export class RedisCacheRepository implements ICacheRepository {
 	async del(key: string): Promise<void> {
 		try {
 			await this.redis.del(key);
-		} catch (error) {;
+		} catch (error) {
 			throw error;
 		}
 	}
@@ -55,14 +55,18 @@ export class RedisCacheRepository implements ICacheRepository {
 		}
 	}
 
-	async setByList(keyValues: Record<string, string>, ttlSeconds?: number): Promise<void> {
+	async setByList(
+		keyValues: Record<string, string>,
+		score:number,
+		ttlSeconds?: number, 
+	): Promise<void> {
 		try {
 			const pipeline = this.redis.pipeline();
 			for (const [key, value] of Object.entries(keyValues)) {
+				pipeline.zadd(key, score, value);
+
 				if (ttlSeconds) {
-					pipeline.setex(key, ttlSeconds, value);
-				} else {
-					pipeline.zadd(key, value);
+					pipeline.expire(key, ttlSeconds);
 				}
 			}
 			await pipeline.exec();
@@ -93,6 +97,30 @@ export class RedisCacheRepository implements ICacheRepository {
 			await this.redis.flushall();
 		} catch (error) {
 			throw Error('Failed to flush all cache');
+		}
+	}
+
+	async zadd(key: string, score: number, value: string): Promise<void> {
+		try {
+			await this.redis.zadd(key, score, value);
+		} catch (error) {
+			throw Error('Failed to add to sorted set');
+		}
+	}
+
+	async zrevrange(key: string, start: number, stop: number): Promise<string[]> {
+		try {
+			return await this.redis.zrevrange(key, start, stop);
+		} catch (error) {
+			throw Error('Failed to get range from sorted set');
+		}
+	}
+
+	async zrem(key: string, value: string): Promise<void> {
+		try {
+			await this.redis.zrem(key, value);
+		} catch (error) {
+			throw Error('Failed to remove from sorted set');
 		}
 	}
 }

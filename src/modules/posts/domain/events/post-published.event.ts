@@ -6,7 +6,7 @@ export class PublishPostEvent extends DomainEvent {
 		public readonly postId: string,
 		public readonly authorId: string,
 		public readonly title: string,
-		public readonly content: string,
+		public readonly slug: string,
 		public readonly tags: string[] = [],
 		public readonly summary: string,
 		public readonly createdAt: Date,
