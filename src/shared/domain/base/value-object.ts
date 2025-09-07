@@ -20,5 +20,3 @@ export abstract class ValueObject<T> {
 
 	protected abstract validate(value: T): void;
 }
-
-

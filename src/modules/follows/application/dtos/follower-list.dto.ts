@@ -14,7 +14,7 @@ export class FollowListDto {
 	static fromDomain(followers: Follow[], total: number): FollowListDto {
 		return new FollowListDto(
 			followers.map((follow) => ({
-				id: follow.getId(),
+				id: follow.getId().getValue(),
 				followerId: follow.getFollowerId().getValue(),
 				followeeId: follow.getFolloweeId().getValue(),
 				createdAt: follow.getCreatedAt(),

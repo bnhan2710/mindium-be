@@ -22,7 +22,7 @@ import { GetFollowCountsQuery } from '../../../application/queries/implements/ge
 import { CheckIsFollowingQuery } from '../../../application/queries/implements/check-is-following.query';
 import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { OffsetPagination } from '@libs/common/dtos';
-import { ObjectIdValidationPipe } from '@libs/common/pipes/object-id-validation.pipe';
+import { ObjectIdValidationPipe } from '@shared/infrastructure/pipes/object-id-validation.pipe';
 
 @ApiTags('Follows')
 @UseGuards(JwtAuthGuard)
@@ -120,7 +120,6 @@ export class FollowController {
 			UserId.create(userId),
 			UserId.create(followeeId),
 		);
-
 		return await this.queryBus.execute(query);
 	}
 }

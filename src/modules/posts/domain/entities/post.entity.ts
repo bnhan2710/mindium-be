@@ -3,27 +3,21 @@ import { SlugGenerator } from '@libs/services';
 import { Slug } from '../value-objects/slug';
 import { PostId } from '../value-objects/post-id';
 import { Tag } from '../value-objects/tag';
-import { v4 } from 'uuid';
+import { v7 } from 'uuid';
+import { PublishPostEvent } from '../events/post-published.event';
 
 export interface PostProps {
-	id: PostId;
 	title: string;
 	content: string;
 	authorId: string;
 	slug: Slug;
 	tags: Tag[];
 	summary: string;
-	createdAt?: Date;
-	updatedAt?: Date;
 }
-export class Post extends AggregateRoot {
-	private readonly props: PostProps;
-	constructor(props: PostProps) {
-		super(props.id.getValue());
-		if (!props.id || !props.title || !props.content || !props.authorId) {
-			throw new Error('Post must have an id, title, content, and author');
-		}
-		this.props = props;
+
+export class Post extends AggregateRoot<PostId, PostProps> {
+	constructor(id: PostId, props: PostProps, createdAt?: Date, updatedAt?: Date) {
+		super(id, props, createdAt, updatedAt);
 	}
 
 	public static create(
@@ -31,26 +25,43 @@ export class Post extends AggregateRoot {
 		content: string,
 		tags: string[] = [],
 		authorId: string,
-		id?: PostId,
-		createAt: Date = new Date(),
+		createdAt: Date = new Date(),
 		updatedAt: Date = new Date(),
 	): Post {
 		const slug = Slug.createFromTitle(title);
 		const tagObjects = tags.map((tag) => Tag.create(tag));
-		return new Post({
-			id: id || PostId.create(v4()),
-			title,
-			content,
-			authorId,
-			slug,
-			tags: tagObjects,
-			summary: Post.generatePostSummary(content, 150),
-			createdAt: createAt ? new Date(createAt) : new Date(),
-			updatedAt: updatedAt ? new Date(updatedAt) : new Date(),
-		});
+		const summary = Post.generatePostSummary(content, 150);
+
+		const post = new Post(
+			PostId.create(v7()),
+			{
+				title,
+				content,
+				authorId,
+				slug,
+				tags: tagObjects,
+				summary,
+			},
+			createdAt,
+			updatedAt,
+		);
+
+		post.addDomainEvent(
+			new PublishPostEvent(
+				post.getId().getValue(),
+				authorId,
+				title,
+				slug.toString(),
+				tags,
+				summary,
+				createdAt,
+			),
+		);
+
+		return post;
 	}
 
-	static generatePostSummary(markdownContent, maxLength = 150) {
+	private static generatePostSummary(markdownContent: string, maxLength = 150): string {
 		const codeRegex = /<code[^>]*>.*?<\/code>/gs;
 		const withoutCode = markdownContent.replace(codeRegex, '');
 
@@ -68,28 +79,34 @@ export class Post extends AggregateRoot {
 
 	public toPrimitives() {
 		return {
-			id: this.props.id.getValue(),
+			id: this.getId().getValue(),
 			title: this.props.title,
 			content: this.props.content,
 			authorId: this.props.authorId,
 			slug: this.props.slug.getValue(),
 			tags: this.props.tags.map((tag) => tag.getValue()),
 			summary: this.props.summary,
+			createdAt: this.getCreatedAt(),
+			updatedAt: this.getUpdatedAt(),
 		};
 	}
 
 	public getTitle(): string {
 		return this.props.title;
 	}
+
 	public getContent(): string {
 		return this.props.content;
 	}
+
 	public getAuthorId(): string {
 		return this.props.authorId;
 	}
+
 	public getSlug(): Slug {
 		return this.props.slug;
 	}
+
 	public getTags(): Tag[] {
 		return this.props.tags;
 	}
@@ -98,26 +115,20 @@ export class Post extends AggregateRoot {
 		return this.props.summary;
 	}
 
-	public generateSlug(title): string {
+	// domain behavior
+	public generateSlug(title: string): string {
 		return SlugGenerator.generate(title);
 	}
 
-	public static updatePost(
-		post: Post,
-		title?: string,
-		content?: string,
-		tags?: string[],
-	): Post {
-		const updatedProps: PostProps = {
-			...post.props,
-			title: title ?? post.props.title,
-			content: content ?? post.props.content,
-			slug: Slug.createFromTitle(title ?? post.props.title),
-			tags: tags ? tags.map((tag) => Tag.create(tag)) : post.props.tags,
-			updatedAt: new Date(),
-		};
+	public updatePost(title?: string, content?: string, tags?: string[]): Post {
+		if (title) this.props.title = title;
+		if (content) this.props.content = content;
+		if (tags) this.props.tags = tags.map((tag) => Tag.create(tag));
 
-		return new Post(updatedProps);
+		this.props.slug = Slug.createFromTitle(this.props.title);
+		this.touch();
+
+		return this;
 	}
 
 	public addTag(tag: string): void {
@@ -126,7 +137,7 @@ export class Post extends AggregateRoot {
 			throw new Error('Tag already exists');
 		}
 		this.props.tags.push(newTag);
-		this.props.updatedAt = new Date();
+		this.touch();
 	}
 
 	public removeTag(tag: string): void {
@@ -135,6 +146,6 @@ export class Post extends AggregateRoot {
 			throw new Error('Tag not found');
 		}
 		this.props.tags.splice(tagIndex, 1);
-		this.props.updatedAt = new Date();
+		this.touch();
 	}
 }

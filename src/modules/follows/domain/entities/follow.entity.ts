@@ -2,44 +2,43 @@ import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { FollowId } from '../value-objects/follow-id.vo';
 import { UserFollowedEvent, UserUnfollowedEvent } from '../events/follow.event';
 import { AggregateRoot } from '@shared/domain/base/base.aggregate-root';
+import { v7 } from 'uuid';
 export interface FollowProps {
-	id: FollowId;
 	followerId: UserId;
 	followeeId: UserId;
-	createdAt: Date;
 }
 
-export class Follow extends AggregateRoot {
-	private readonly props: FollowProps;
-
-	private constructor(props: FollowProps) {
-		super(props.id.getValue());
+export class Follow extends AggregateRoot<FollowId, FollowProps> {
+	private constructor(
+		id: FollowId,
+		props: FollowProps,
+		createdAt?: Date,
+		updatedAt?: Date,
+	) {
+		super(id, props, createdAt, updatedAt);
 		this.validateProps(props);
-		this.props = props;
 	}
 
 	public static create(followerId: UserId, followeeId: UserId): Follow {
-		const followId = FollowId.generate();
-		const follow = new Follow({
-			id: followId,
-			followerId,
-			followeeId,
-			createdAt: new Date(),
-		});
+		const followId = FollowId.create(v7());
+		const follow = new Follow(followId, { followerId, followeeId }, new Date());
 
 		follow.addDomainEvent(new UserFollowedEvent(followerId, followeeId));
 
 		return follow;
 	}
 
-	public static reconstitute(props: FollowProps): Follow {
-		return new Follow(props);
+	public static reconstitute(
+		props: FollowProps,
+		id?: FollowId,
+		createdAt?: Date,
+		updatedAt?: Date,
+	): Follow {
+		const followId = id || FollowId.create(v7());
+		return new Follow(followId, props, createdAt, updatedAt);
 	}
 
 	private validateProps(props: FollowProps): void {
-		if (!props.id) {
-			throw new Error('Follow ID is required');
-		}
 		if (!props.followerId) {
 			throw new Error('Follower ID is required');
 		}
@@ -69,9 +68,5 @@ export class Follow extends AggregateRoot {
 
 	public getFolloweeId(): UserId {
 		return this.props.followeeId;
-	}
-
-	public getCreatedAt(): Date {
-		return this.props.createdAt;
 	}
 }

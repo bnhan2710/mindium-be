@@ -91,6 +91,15 @@ export class MongoFollowRepository implements IFollowRepository {
 		return !!isExist;
 	}
 
+	async getFollowerIds(userId: string): Promise<string[]> {
+		return await this.followModel
+			.find({ followeeId: new Types.ObjectId(userId) })
+			.select('followerId -_id')
+			.lean()
+			.exec()
+			.then((docs) => docs.map((doc) => doc.followerId.toString()));
+	}
+
 	async getFollowCounts(userId: UserId): Promise<{
 		followersCount: number;
 		followingCount: number;

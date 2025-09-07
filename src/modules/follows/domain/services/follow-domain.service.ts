@@ -3,7 +3,7 @@ import { UserId } from '@modules/users/domain/value-objects/user-id.vo';
 import { Follow } from '../entities/follow.entity';
 import { IFollowRepository } from '../repositories/follow.repository';
 import { IUserRepository } from '@modules/users/domain/repositories/user.repository';
-import { FOLLOW_TOKENS } from '@modules/follows/follow-tokens';
+import { FOLLOW_TOKENS } from '@modules/follows/follow.tokens';
 import { USER_TOKENS } from '@modules/users/user.tokens';
 import {
 	FollowSelfException,

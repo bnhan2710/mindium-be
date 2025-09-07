@@ -1,14 +1,12 @@
-import { v4 } from 'uuid';
-import { ValueObject } from '@shared/domain/value-objects/vo';
+import { v7 } from 'uuid';
+import { ValueObject } from '@shared/domain/base/value-object';
 export class SessionId extends ValueObject<string> {
 	constructor(private readonly value: string) {
 		super(value);
 	}
 
 	protected validate(value: string): void {
-		if (!value || !this.isValidUUID(value)) {
-			throw new Error('Invalid session ID');
-		}
+		
 	}
 
 	private isValidUUID(value: string): boolean {
@@ -18,7 +16,7 @@ export class SessionId extends ValueObject<string> {
 	}
 
 	public static generate(): SessionId {
-		const uuid = v4();
+		const uuid = v7();
 		return new SessionId(uuid);
 	}
 }
